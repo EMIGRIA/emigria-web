@@ -1,0 +1,13 @@
+// ═══════════════════════════════════════════
+// EMIGRIA — Prisma Schema
+// ═══════════════════════════════════════════
+// Models will be added once schema is finalized with the full team
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}

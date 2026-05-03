@@ -1,0 +1,39 @@
+{
+  "name": "emigria-backend",
+  "version": "1.0.0",
+  "description": "Multimodal AI-Powered Overseas Job Fraud Detection platform for Indonesian Migrant Workers (PMI)",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "lint": "npx eslint src/"
+  },
+  "keywords": [
+    "emigria",
+    "fraud-detection",
+    "migrant-workers",
+    "pmi",
+    "gemini-ai",
+    "bp2mi"
+  ],
+  "author": "EMIGRIA Team — Coding Camp 2026 powered by DBS Foundation",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^7.8.0",
+    "axios": "^1.15.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+
+    "express-rate-limit": "^8.4.1",
+    "helmet": "^8.1.0",
+    "multer": "^2.1.1",
+    "nanoid": "^5.1.9",
+    "prisma": "^7.8.0",
+    "zod": "^4.4.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
