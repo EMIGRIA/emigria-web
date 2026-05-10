@@ -3,7 +3,7 @@ import scanRouter from './scan.routes.js';
 
 const router = Router();
 
-// mount all route modules
-router.use(scanRouter);
+// Prefix all scan routes with "/api"
+router.use('/api', scanRouter);
 
 export default router;
