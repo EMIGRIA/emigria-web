@@ -1,10 +1,15 @@
-/**
- * RealityCheckService
- * Role: Compare extracted job offer data (salary, position, requirements)
- *       against official BP2MI (Badan Pelindungan Pekerja Migran Indonesia)
- *       standards to identify unrealistic or fraudulent claims
- * Status: Skeleton — implementation pending
- * Dependencies: BP2MI salary standard data from constants.js
- *
- * TODO: Waiting for Data Science team to provide BP2MI salary standard data
- */
+// Normalize salary standards and reality check data from Gemini
+export function analyze(realityCheckFromGemini) {
+  const rc = realityCheckFromGemini || {};
+  const redFlags = rc.red_flags || [];
+
+  return {
+    salary_is_realistic: rc.salary_is_realistic ?? true,
+    realistic_salary_range: rc.realistic_salary_range || null,
+    salary_gap_assessment: rc.salary_gap_assessment || null,
+    suspicious_promises: rc.suspicious_promises || [],
+    red_flags: redFlags,
+    assessment_summary: rc.assessment_summary || null,
+    red_flags_count: redFlags.length,
+  };
+}
