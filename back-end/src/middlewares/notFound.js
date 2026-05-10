@@ -1,10 +1,3 @@
-/**
- * 404 Not Found Handler
- *
- * Catches any request that does not match a defined route
- * and responds with a structured 404 JSON error.
- */
-
 export const notFound = (req, res) => {
   res.status(404).json({
     status: 'error',
