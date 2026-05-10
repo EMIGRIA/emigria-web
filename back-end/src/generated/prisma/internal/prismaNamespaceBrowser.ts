@@ -51,7 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-
+  ScanLog: 'ScanLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -68,4 +68,50 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const ScanLogScalarFieldEnum = {
+  id: 'id',
+  input_type: 'input_type',
+  country: 'country',
+  title: 'title',
+  industry: 'industry',
+  employment_type: 'employment_type',
+  fraud_score: 'fraud_score',
+  risk_level: 'risk_level',
+  geo_risk_score: 'geo_risk_score',
+  geo_risk_level: 'geo_risk_level',
+  salary_realistic: 'salary_realistic',
+  red_flags_count: 'red_flags_count',
+  telecommuting: 'telecommuting',
+  has_company_logo: 'has_company_logo',
+  has_questions: 'has_questions',
+  created_at: 'created_at'
+} as const
+
+export type ScanLogScalarFieldEnum = (typeof ScanLogScalarFieldEnum)[keyof typeof ScanLogScalarFieldEnum]
+
+
+export const SortOrder = {
+  asc: 'asc',
+  desc: 'desc'
+} as const
+
+export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

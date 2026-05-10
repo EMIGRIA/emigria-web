@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.8.0",
   "engineVersion": "3c6e192761c0362d496ed980de936e2f3cebcd3a",
   "activeProvider": "postgresql",
-  "inlineSchema": "// ═══════════════════════════════════════════\n// EMIGRIA — Prisma Schema\n// ═══════════════════════════════════════════\n// Models will be added once schema is finalized with the full team\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n",
+  "inlineSchema": "// ═══════════════════════════════════════════\n// EMIGRIA — Prisma Schema\n// ═══════════════════════════════════════════\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel ScanLog {\n  id               String   @id @default(uuid())\n  input_type       String\n  country          String?\n  title            String?\n  industry         String?\n  employment_type  String?\n  fraud_score      Float?\n  risk_level       String\n  geo_risk_score   Float?\n  geo_risk_level   String?\n  salary_realistic Boolean?\n  red_flags_count  Int      @default(0)\n  telecommuting    Int?\n  has_company_logo Int?\n  has_questions    Int?\n  created_at       DateTime @default(now())\n\n  @@map(\"scan_logs\")\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -32,10 +32,10 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"ScanLog\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"input_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"country\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"industry\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"employment_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"fraud_score\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"risk_level\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"geo_risk_score\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"geo_risk_level\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"salary_realistic\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"red_flags_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"telecommuting\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"has_company_logo\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"has_questions\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"scan_logs\"}},\"enums\":{},\"types\":{}}")
 config.parameterizationSchema = {
-  strings: JSON.parse("[]"),
-  graph: "AAAA"
+  strings: JSON.parse("[\"where\",\"ScanLog.findUnique\",\"ScanLog.findUniqueOrThrow\",\"orderBy\",\"cursor\",\"ScanLog.findFirst\",\"ScanLog.findFirstOrThrow\",\"ScanLog.findMany\",\"data\",\"ScanLog.createOne\",\"ScanLog.createMany\",\"ScanLog.createManyAndReturn\",\"ScanLog.updateOne\",\"ScanLog.updateMany\",\"ScanLog.updateManyAndReturn\",\"create\",\"update\",\"ScanLog.upsertOne\",\"ScanLog.deleteOne\",\"ScanLog.deleteMany\",\"having\",\"_count\",\"_avg\",\"_sum\",\"_min\",\"_max\",\"ScanLog.groupBy\",\"ScanLog.aggregate\",\"AND\",\"OR\",\"NOT\",\"id\",\"input_type\",\"country\",\"title\",\"industry\",\"employment_type\",\"fraud_score\",\"risk_level\",\"geo_risk_score\",\"geo_risk_level\",\"salary_realistic\",\"red_flags_count\",\"telecommuting\",\"has_company_logo\",\"has_questions\",\"created_at\",\"equals\",\"in\",\"notIn\",\"lt\",\"lte\",\"gt\",\"gte\",\"not\",\"contains\",\"startsWith\",\"endsWith\",\"set\",\"increment\",\"decrement\",\"multiply\",\"divide\"]"),
+  graph: "RQsQExwAADEAMB0AAAQAEB4AADEAMB8BAAAAASABADIAISEBADMAISIBADMAISMBADMAISQBADMAISUIADQAISYBADIAIScIADQAISgBADMAISkgADUAISoCADYAISsCADcAISwCADcAIS0CADcAIS5AADgAIQEAAAABACABAAAAAQAgExwAADEAMB0AAAQAEB4AADEAMB8BADIAISABADIAISEBADMAISIBADMAISMBADMAISQBADMAISUIADQAISYBADIAIScIADQAISgBADMAISkgADUAISoCADYAISsCADcAISwCADcAIS0CADcAIS5AADgAIQshAAA5ACAiAAA5ACAjAAA5ACAkAAA5ACAlAAA5ACAnAAA5ACAoAAA5ACApAAA5ACArAAA5ACAsAAA5ACAtAAA5ACADAAAABAAgAwAABQAwBAAAAQAgAwAAAAQAIAMAAAUAMAQAAAEAIAMAAAAEACADAAAFADAEAAABACAQHwEAAAABIAEAAAABIQEAAAABIgEAAAABIwEAAAABJAEAAAABJQgAAAABJgEAAAABJwgAAAABKAEAAAABKSAAAAABKgIAAAABKwIAAAABLAIAAAABLQIAAAABLkAAAAABAQgAAAkAIBAfAQAAAAEgAQAAAAEhAQAAAAEiAQAAAAEjAQAAAAEkAQAAAAElCAAAAAEmAQAAAAEnCAAAAAEoAQAAAAEpIAAAAAEqAgAAAAErAgAAAAEsAgAAAAEtAgAAAAEuQAAAAAEBCAAACwAwAQgAAAsAMBAfAQA_ACEgAQA_ACEhAQBAACEiAQBAACEjAQBAACEkAQBAACElCABBACEmAQA_ACEnCABBACEoAQBAACEpIABCACEqAgBDACErAgBEACEsAgBEACEtAgBEACEuQABFACECAAAAAQAgCAAADgAgEB8BAD8AISABAD8AISEBAEAAISIBAEAAISMBAEAAISQBAEAAISUIAEEAISYBAD8AIScIAEEAISgBAEAAISkgAEIAISoCAEMAISsCAEQAISwCAEQAIS0CAEQAIS5AAEUAIQIAAAAEACAIAAAQACACAAAABAAgCAAAEAAgAwAAAAEAIA8AAAkAIBAAAA4AIAEAAAABACABAAAABAAgEBUAADoAIBYAADsAIBcAAD4AIBgAAD0AIBkAADwAICEAADkAICIAADkAICMAADkAICQAADkAICUAADkAICcAADkAICgAADkAICkAADkAICsAADkAICwAADkAIC0AADkAIBMcAAAaADAdAAAXABAeAAAaADAfAQAbACEgAQAbACEhAQAcACEiAQAcACEjAQAcACEkAQAcACElCAAdACEmAQAbACEnCAAdACEoAQAcACEpIAAeACEqAgAfACErAgAgACEsAgAgACEtAgAgACEuQAAhACEDAAAABAAgAwAAFgAwFAAAFwAgAwAAAAQAIAMAAAUAMAQAAAEAIBMcAAAaADAdAAAXABAeAAAaADAfAQAbACEgAQAbACEhAQAcACEiAQAcACEjAQAcACEkAQAcACElCAAdACEmAQAbACEnCAAdACEoAQAcACEpIAAeACEqAgAfACErAgAgACEsAgAgACEtAgAgACEuQAAhACEOFQAAIwAgGAAAMAAgGQAAMAAgLwEAAAABMAEAAAAEMQEAAAAEMgEAAAABMwEAAAABNAEAAAABNQEAAAABNgEALwAhNwEAAAABOAEAAAABOQEAAAABDhUAACYAIBgAAC4AIBkAAC4AIC8BAAAAATABAAAABTEBAAAABTIBAAAAATMBAAAAATQBAAAAATUBAAAAATYBAC0AITcBAAAAATgBAAAAATkBAAAAAQ0VAAAmACAWAAAnACAXAAAnACAYAAAnACAZAAAnACAvCAAAAAEwCAAAAAUxCAAAAAUyCAAAAAEzCAAAAAE0CAAAAAE1CAAAAAE2CAAsACEFFQAAJgAgGAAAKwAgGQAAKwAgLyAAAAABNiAAKgAhDRUAACMAIBYAACkAIBcAACMAIBgAACMAIBkAACMAIC8CAAAA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"
 }
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
@@ -70,8 +70,8 @@ export interface PrismaClientConstructor {
    * const prisma = new PrismaClient({
    *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
    * })
-   * // Fetch zero or more Users
-   * const users = await prisma.user.findMany()
+   * // Fetch zero or more ScanLogs
+   * const scanLogs = await prisma.scanLog.findMany()
    * ```
    * 
    * Read more in our [docs](https://pris.ly/d/client).
@@ -94,8 +94,8 @@ export interface PrismaClientConstructor {
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * // Fetch zero or more ScanLogs
+ * const scanLogs = await prisma.scanLog.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -188,7 +188,15 @@ export interface PrismaClient<
     extArgs: ExtArgs
   }>>
 
-    
+      /**
+   * `prisma.scanLog`: Exposes CRUD operations for the **ScanLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ScanLogs
+    * const scanLogs = await prisma.scanLog.findMany()
+    * ```
+    */
+  get scanLog(): Prisma.ScanLogDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {
