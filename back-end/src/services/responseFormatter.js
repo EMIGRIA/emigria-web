@@ -42,8 +42,6 @@ export function format({ scanId, inputType, geminiResult, mlResult, geoResult, r
       risk_level: riskLevel,
       fraud_score: fraudScore,
       geo_risk_score: geoResult.risk_score,
-      model_version: mlResult.model_version,
-      is_hardcoded: mlResult.is_hardcoded,
     },
     extracted_data: geminiResult.extracted_data,
     reality_check: realityResult,
