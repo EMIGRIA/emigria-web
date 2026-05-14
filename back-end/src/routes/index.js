@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import scanRouter from './scan.routes.js';
+import routes from './routes.js';
 
 const router = Router();
 
 // Prefix all scan routes with "/api"
-router.use('/api', scanRouter);
+router.use('/api', routes);
 
 export default router;
