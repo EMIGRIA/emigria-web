@@ -19,5 +19,5 @@ export function predict(geminiResult) {
   // Cap the maximum score at 1.0 (100%)
   const fraud_probability = Math.round(Math.min(score, 1.0) * 100) / 100;
 
-  return { fraud_probability, model_version: 'hardcoded-v1', is_hardcoded: true };
+  return { fraud_probability };
 }
