@@ -10,55 +10,54 @@ Use null for any field you cannot determine with confidence.
   "extracted_data": {
     "title": string | null,
     "location": string | null,
-    "department": string | null,
+    "country": string | null,
+    "employment_type": string | null,
+    "required_experience": string | null,
+    "required_education": string | null,
+    "industry": string | null,
     "salary_range": string | null,
+    "salary_currency": string | null,
     "company_profile": string | null,
     "description": string | null,
     "requirements": string | null,
     "benefits": string | null,
     "telecommuting": 0 | 1,
     "has_company_logo": 0 | 1,
-    "has_questions": 0 | 1,
-    "employment_type": string | null,
-    "required_experience": string | null,
-    "required_education": string | null,
-    "industry": string | null,
-    "function": string | null
-  },
-  "reality_check": {
-    "salary_is_realistic": boolean,
-    "realistic_salary_range": string | null,
-    "salary_gap_assessment": string | null,
-    "suspicious_promises": string[],
-    "red_flags": string[],
-    "assessment_summary": string | null
-  },
-  "geo_risk": {
-    "country_identified": string | null,
-    "risk_level": "low"|"medium"|"high"|"critical"|null,
-    "risk_score": number | null,
-    "risk_factors": string[],
-    "worker_safety_notes": string | null,
-    "is_known_high_risk": boolean
+    "has_questions": 0 | 1
   }
 }
 
 Field instructions:
-- salary_range: normalize any format:
-    "3-5 juta" → "3000000-5000000 IDR/month"
-    "$2000/month" → "2000 USD/month"
-    "SAR 1500" → "1500 SAR/month"
-    vague/unclear → null
-- telecommuting: 1 if WFH/remote/work from home mentioned
-- has_company_logo: 1 if logo clearly visible in image.
-  Always 0 for text/url input.
-- has_questions: 1 if screening questions mentioned
-- employment_type: Full-time/Part-time/Contract/Internship
-- required_experience: Mid-Senior level/Entry level/Internship/Not Applicable
-- required_education: Bachelor's Degree/High School/Some College/Master's Degree
-- reality_check fields: in simple Bahasa Indonesia
-- geo_risk fields: in simple Bahasa Indonesia
-- geo_risk.risk_score: float 0.0 to 1.0`;
+- title: job position title as written in the offer
+- location: full location as written, city and country
+- country: clean country name ONLY — no city, no extra text.
+    "Malaysia, Kuala Lumpur" → country: "Malaysia"
+    "Arab Saudi" → country: "Saudi Arabia"
+    "Korea Selatan" → country: "South Korea"
+    Always use English country name.
+- employment_type: Full-time / Part-time / Contract / Internship / null
+- required_experience: Mid-Senior level / Entry level / Internship / Not Applicable / null
+- required_education: Bachelor's Degree / High School or equivalent / Some College / Master's Degree / null
+- industry: industry sector if identifiable, else null
+- salary_range: extract numeric value EXACTLY as written, no conversion, no currency symbol.
+    "Rp 20.000.000/bulan" → "20000000"
+    "MYR 1500-2000" → "1500-2000"
+    "gaji kompetitif" → null
+- salary_currency: currency written in the brochure.
+    IDR or Rupiah mentioned → "IDR"
+    MYR / Ringgit → "MYR"
+    SAR / Riyal → "SAR"
+    SGD → "SGD"
+    TWD → "TWD"
+    HKD → "HKD"
+    Cannot be determined → null
+- company_profile: company description if mentioned, else empty string ""
+- description: full job description or role summary
+- requirements: skills or qualifications needed, else empty string ""
+- benefits: benefits or perks mentioned, else empty string ""
+- telecommuting: 1 if WFH/remote/work from home mentioned, else 0
+- has_company_logo: 1 if company logo clearly visible in image. Always 0 for text/url input.
+- has_questions: 1 if screening questions mentioned, else 0`;
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
@@ -97,7 +96,7 @@ export async function extract(normalizedInput) {
     const parsed = JSON.parse(responseText);
     
     // Validate the JSON structure safely
-    if (!parsed.extracted_data || !parsed.reality_check || !parsed.geo_risk) {
+    if (!parsed.extracted_data) {
       throw new Error('Gemini tidak mengembalikan struktur JSON yang lengkap');
     }
     
