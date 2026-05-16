@@ -15,17 +15,28 @@ export const analyze = async (req, res) => {
     // 2. Extract structured data via Gemini
     const geminiResult = await geminiService.extract(payload);
 
-    // 3. Run ML prediction, geo risk, and reality check in parallel
-    const [mlResult, geoResult, realityResult] = await Promise.all([
-      mlService.predict(geminiResult),
-      geoRiskService.analyze(geminiResult.geo_risk),
-      realityCheckService.analyze(geminiResult.reality_check),
+    // 3. Run geo risk and reality check in parallel (constants-based lookup)
+    const [geoResult, realityResult] = await Promise.all([
+      geoRiskService.analyze(
+        geminiResult.extracted_data.country
+      ),
+      realityCheckService.analyze(
+        geminiResult.extracted_data.country,
+        geminiResult.extracted_data.salary_range,
+        geminiResult.extracted_data.salary_currency
+      ),
     ]);
 
-    // 4. Generate scan ID
+    // 4. Run ML prediction (depends on realityResult)
+    const mlResult = mlService.predict(
+      geminiResult.extracted_data,
+      realityResult
+    );
+
+    // 5. Generate scan ID
     const scanId = nanoid(10);
 
-    // 5. Format final response
+    // 6. Format final response
     const finalResponse = responseFormatter.format({
       scanId,
       inputType: payload.type,
@@ -35,10 +46,10 @@ export const analyze = async (req, res) => {
       realityResult,
     });
 
-    // 6. Fire-and-forget log — never await
+    // 7. Fire-and-forget log — never await
     logService.save(finalResponse).catch(console.error);
 
-    // 7. Send response
+    // 8. Send response
     return res.status(200).json(finalResponse);
   } catch (err) {
     if (err instanceof AppError) {
