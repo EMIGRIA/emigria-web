@@ -1,18 +1,38 @@
-// Default risk scores mapped by severity level
-const RISK_LEVEL_SCORES = { low: 0.2, medium: 0.5, high: 0.75, critical: 0.95 };
+import { GEO_RISK_DATA } from '../config/constants.js';
 
-// Normalize geographic risk data extracted by Gemini
-export function analyze(geoRiskFromGemini) {
-  const geo = geoRiskFromGemini || {};
-  const riskLevel = geo.risk_level || 'medium';
-  const riskScore = geo.risk_score != null ? geo.risk_score : (RISK_LEVEL_SCORES[riskLevel] ?? 0.5);
+// Map risk level string to numeric score
+const RISK_LEVEL_SCORES = {
+  LOW: 0.2,
+  MEDIUM: 0.5,
+  HIGH: 0.75,
+  CRITICAL: 0.95,
+};
+
+// Static geo risk lookup from constants — no longer uses Gemini output
+export function analyze(country) {
+  const data = GEO_RISK_DATA[country] ?? null;
+
+  if (!data) {
+    return {
+      country: country ?? null,
+      data_available: false,
+      risk_level: "MEDIUM",
+      risk_score: 0.5,
+      fraud_rate: null,
+      nearest_kbri: null,
+      kbri_distance_note: null,
+      crime_index: null,
+    };
+  }
 
   return {
-    country: geo.country_identified || null,
-    risk_level: riskLevel,
-    risk_score: riskScore,
-    risk_factors: geo.risk_factors || [],
-    worker_safety_notes: geo.worker_safety_notes || null,
-    is_known_high_risk: geo.is_known_high_risk === true,
+    country,
+    data_available: true,
+    risk_level: data.risk_level,
+    risk_score: RISK_LEVEL_SCORES[data.risk_level] ?? 0.5,
+    fraud_rate: data.fraud_rate,
+    nearest_kbri: data.nearest_kbri,
+    kbri_distance_note: data.kbri_distance_note,
+    crime_index: data.crime_index,
   };
 }
