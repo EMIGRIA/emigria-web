@@ -1,37 +1,70 @@
-// Convert fraud probability score (0.0 - 1.0) into a risk tier
-function getRiskLevel(fraudScore) {
-  if (fraudScore >= 0.80) return 'critical';
-  if (fraudScore >= 0.60) return 'high';
-  if (fraudScore >= 0.40) return 'medium';
-  return 'low';
+// Determine frontend-facing risk_level from ML result + geo fallback
+function getRiskLevel(mlResult, geoResult) {
+  if (mlResult.is_fallback === true) {
+    // FastAPI was unreachable — fall back to geo risk
+    const geo = (geoResult.risk_level || '').toUpperCase();
+    if (geo === 'CRITICAL') return 'critical';
+    if (geo === 'HIGH') return 'high';
+    if (geo === 'MEDIUM') return 'medium';
+    return 'low';
+  }
+
+  // Normal path — use ML verdict
+  if (mlResult.risk_level === 'HIGH_RISK') return 'high';
+  if (mlResult.risk_level === 'LOW_RISK') return 'low';
+  return 'medium';
 }
 
 // Generate an automatic summary text in Indonesian
-function generateSummaryText(riskLevel, fraudScore) {
-  const pct = Math.round(fraudScore * 100);
-  const map = {
-    critical: `⛔ BAHAYA TINGGI! Lowongan ini memiliki skor penipuan ${pct}%. Sangat tidak disarankan untuk melamar. Banyak tanda-tanda penipuan yang terdeteksi.`,
-    high: `⚠️ WASPADA! Lowongan ini memiliki skor penipuan ${pct}%. Terdapat beberapa tanda mencurigakan. Lakukan verifikasi lebih lanjut sebelum melamar.`,
-    medium: `🟡 HATI-HATI. Lowongan ini memiliki skor penipuan ${pct}%. Ada beberapa hal yang perlu diverifikasi. Pastikan untuk mengecek kredibilitas perusahaan.`,
-    low: `✅ RISIKO RENDAH. Lowongan ini memiliki skor penipuan ${pct}%. Terlihat cukup aman, namun tetap lakukan pengecekan standar.`,
-  };
-  return map[riskLevel] || `Skor penipuan: ${pct}%.`;
+function generateSummaryText(riskLevel, triggeredRules) {
+  if (riskLevel === 'high' || riskLevel === 'critical') {
+    return (
+      'Lowongan ini terindikasi penipuan. ' +
+      'Ditemukan ' + triggeredRules.length + ' red flag: ' +
+      triggeredRules.slice(0, 2).join(', ') + '.'
+    );
+  }
+  if (riskLevel === 'low') {
+    return (
+      'Lowongan ini tampak relatif aman. ' +
+      'Tetap lakukan verifikasi mandiri sebelum mendaftar.'
+    );
+  }
+  // medium
+  return (
+    'Lowongan ini memiliki beberapa indikasi mencurigakan. ' +
+    'Lakukan verifikasi lebih lanjut sebelum mendaftar.'
+  );
 }
 
 // Generate a WhatsApp-friendly shareable text
-function generateShareText(riskLevel, fraudScore, title, country) {
-  const pct = Math.round(fraudScore * 100);
+function generateShareText(riskLevel, title, country, triggeredRules, realityResult) {
+  const redFlags = triggeredRules?.length > 0
+    ? triggeredRules
+    : realityResult.flag
+      ? [realityResult.flag]
+      : [];
+
   const job = title || 'Lowongan Kerja';
-  const loc = country ? ` di ${country}` : '';
-  return `🔍 *Hasil Pemeriksaan Emigria*\n\nLowongan: ${job}${loc}\nSkor Penipuan: ${pct}%\nTingkat Risiko: ${riskLevel.toUpperCase()}\n\n${generateSummaryText(riskLevel, fraudScore)}\n\nCek lowongan kerjamu di Emigria → emigria.vercel.app`;
+  const loc = country || '-';
+
+  return (
+    '⚠️ *PERINGATAN LOWONGAN KERJA*\n' +
+    'Posisi: ' + job + '\n' +
+    'Lokasi: ' + loc + '\n' +
+    'Status: ' + riskLevel.toUpperCase() + '\n\n' +
+    'Red Flags:\n' +
+    redFlags.slice(0, 3).map(f => '• ' + f).join('\n') +
+    '\n\nDiverifikasi oleh Emigria'
+  );
 }
 
 // Combine all pipeline results into a clean unified JSON response
 export function format({ scanId, inputType, geminiResult, mlResult, geoResult, realityResult }) {
-  const fraudScore = mlResult.fraud_probability;
-  const riskLevel = getRiskLevel(fraudScore);
+  const riskLevel = getRiskLevel(mlResult, geoResult);
   const title = geminiResult.extracted_data?.title || null;
   const country = geoResult.country || null;
+  const triggeredRules = mlResult.triggered_rules ?? [];
 
   return {
     success: true,
@@ -40,10 +73,19 @@ export function format({ scanId, inputType, geminiResult, mlResult, geoResult, r
     input_type: inputType,
     verdict: {
       risk_level: riskLevel,
-      fraud_score: fraudScore,
+      ml_risk_level: mlResult.risk_level,
+      ml_fraud_probability: mlResult.ml_fraud_probability,
+      pmi_rule_score: mlResult.pmi_rule_score,
+      fraud_prediction: mlResult.fraud_prediction,
       geo_risk_score: geoResult.risk_score,
+      is_fallback: mlResult.is_fallback,
     },
-    extracted_data: geminiResult.extracted_data,
+    triggered_rules: triggeredRules,
+    extracted_data: (() => {
+      const { extra, ...clean } = geminiResult.extracted_data || {};
+      return clean;
+    })(),
+    risk_signals: geminiResult.extracted_data?.extra?.risk_signals ?? null,
     reality_check: {
       data_available: realityResult.data_available,
       salary_is_realistic: realityResult.salary_is_realistic,
@@ -65,8 +107,8 @@ export function format({ scanId, inputType, geminiResult, mlResult, geoResult, r
       crime_index: geoResult.crime_index,
     },
     smart_action: {
-      summary_text: generateSummaryText(riskLevel, fraudScore),
-      share_text: generateShareText(riskLevel, fraudScore, title, country),
+      summary_text: generateSummaryText(riskLevel, triggeredRules),
+      share_text: generateShareText(riskLevel, title, country, triggeredRules, realityResult),
     },
   };
 }
