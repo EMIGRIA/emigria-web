@@ -24,6 +24,7 @@ model ScanLog {
   geo_risk_level   String?
   salary_realistic Boolean?
   red_flags_count  Int      @default(0)
+  triggered_rules_count Int  @default(0)
   telecommuting    Int?
   has_company_logo Int?
   has_questions    Int?

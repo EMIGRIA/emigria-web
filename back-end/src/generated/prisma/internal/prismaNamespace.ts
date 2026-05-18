@@ -530,6 +530,7 @@ export const ScanLogScalarFieldEnum = {
   geo_risk_level: 'geo_risk_level',
   salary_realistic: 'salary_realistic',
   red_flags_count: 'red_flags_count',
+  triggered_rules_count: 'triggered_rules_count',
   telecommuting: 'telecommuting',
   has_company_logo: 'has_company_logo',
   has_questions: 'has_questions',
