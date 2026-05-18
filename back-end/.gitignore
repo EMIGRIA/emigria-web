@@ -42,3 +42,9 @@ tmp/
 temp/
 uploads/
 node_modules/
+
+# # Markdown
+CLAUDE.md
+
+# docs 
+docs/

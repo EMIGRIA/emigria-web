@@ -31,12 +31,12 @@ EMIGRIA helps Indonesian Migrant Workers (PMI / Pekerja Migran Indonesia) detect
 | Language | JavaScript (ESM) |
 | Database | PostgreSQL (Neon Serverless) |
 | ORM | Prisma 7 |
-| AI Extraction | Google Gemini 1.5 Flash API |
+| AI Extraction | Google Gemini 2.5 Flash SDK |
 | ML Scoring | FastAPI + MLP Model (external service) |
 | Validation | Zod |
 | File Upload | Multer |
 | HTTP Client | Axios |
-| Security | Helmet, CORS, express-rate-limit |
+| Security | Helmet, CORS |
 
 ---
 
@@ -98,7 +98,6 @@ emigria-backend/
     ├── middlewares/
     │   ├── errorHandler.js      # Global error handler
     │   ├── notFound.js          # 404 route handler
-    │   ├── rateLimiter.js       # Rate limiting (global + scan)
     │   └── validateScan.js      # Zod validation + multer config
     │
     ├── routes/
@@ -119,8 +118,7 @@ emigria-backend/
     │   └── logService.js        # Anonymous scan logging
     │
     └── utils/
-        ├── axiosInstance.js      # Pre-configured HTTP client
-        └── AppError.js          # Custom operational error class
+        └── axiosClient.js       # Simple pre-configured Axios instance
 ```
 
 ---

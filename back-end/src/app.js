@@ -3,32 +3,27 @@ import helmet from 'helmet';
 import cors from 'cors';
 import { ALLOWED_ORIGINS } from './config/env.js';
 import router from './routes/index.js';
-import { notFound } from './middlewares/notFound.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
 const app = express();
 
-// Security headers 
+// Security and CORS configuration
 app.use(helmet());
+app.use(cors({ origin: ALLOWED_ORIGINS ? ALLOWED_ORIGINS.split(',') : '*' }));
 
-// CORS configuration
-app.use(
-  cors({
-    origin: ALLOWED_ORIGINS ? ALLOWED_ORIGINS.split(',') : '*',
-  })
-);
+// Limit request body size to 10MB to support large image payloads
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Body parsers
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// API routes
+// Mount API routes
 app.use(router);
 
-// 404 handler 
-app.use(notFound);
+// Handle undefined routes (404 Not Found)
+app.use((req, res) => {
+  res.status(404).json({ success: false, message: `Route tidak ditemukan: ${req.method} ${req.originalUrl}` });
+});
 
-// Global error handler 
+// Global error handler (must be the last middleware)
 app.use(errorHandler);
 
 export default app;
