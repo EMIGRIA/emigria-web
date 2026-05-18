@@ -17,6 +17,7 @@ export async function save(formattedResponse) {
       telecommuting: formattedResponse.extracted_data?.telecommuting ?? null,
       has_company_logo: formattedResponse.extracted_data?.has_company_logo ?? null,
       has_questions: formattedResponse.extracted_data?.has_questions ?? null,
+      triggered_rules_count: formattedResponse.triggered_rules?.length ?? 0,
     },
   });
 }
