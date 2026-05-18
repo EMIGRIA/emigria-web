@@ -27,10 +27,9 @@ export const analyze = async (req, res) => {
       ),
     ]);
 
-    // 4. Run ML prediction (depends on realityResult)
-    const mlResult = mlService.predict(
-      geminiResult.extracted_data,
-      realityResult
+    // 4. Run ML prediction via FastAPI
+    const mlResult = await mlService.predict(
+      geminiResult.extracted_data
     );
 
     // 5. Generate scan ID
@@ -52,13 +51,6 @@ export const analyze = async (req, res) => {
     // 8. Send response
     return res.status(200).json(finalResponse);
   } catch (err) {
-    if (err instanceof AppError) {
-      return res.status(err.statusCode).json({
-        success: false,
-        message: err.message,
-      });
-    }
-
     console.error('Scan pipeline error:', err);
     return res.status(500).json({
       success: false,
