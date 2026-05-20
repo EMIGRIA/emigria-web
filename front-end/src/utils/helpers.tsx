@@ -1,4 +1,3 @@
-import React from 'react';
 import { AlertOctagon, AlertTriangle, ShieldCheck, Search } from 'lucide-react';
 import type { StatusType, HistoryItem, JobAnalysisResult } from '../types/index';
 
@@ -13,6 +12,6 @@ export const getStatusConfig = (status: StatusType) => {
 
 export const handleShareAction = (data: HistoryItem | JobAnalysisResult | null) => {
     if (!data) return;
-    const text = `🚨 *Hasil Verifikasi Emigria* 🚨\n\nPosisi: ${data.jobTitle}\nTujuan: ${data.destination}\nStatus: *${data.status}* (Risiko: ${data.riskScore}/100)\n\n*Catatan Bahaya:*\n${data.redFlags.map(f => `- ${f}`).join('\n')}\n\nSelalu validasi di situs resmi BP2MI!`;
+    const text = `*Hasil Verifikasi Emigria*\n\nPosisi: ${data.jobTitle}\nTujuan: ${data.destination}\nStatus: *${data.status}* (Risiko: ${data.riskScore}/100)\n\n*Catatan Bahaya:*\n${data.redFlags.map(f => `- ${f}`).join('\n')}\n\nSelalu validasi di situs resmi BP2MI!`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
 };
