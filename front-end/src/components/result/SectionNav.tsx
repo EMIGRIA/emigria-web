@@ -7,7 +7,7 @@ export default function SectionNav() {
     const handleScroll = () => {
 
       // Detect active section based on scroll position
-      const sections = ["ringkasan", "aturan", "sinyal", "geo", "gaji", "bagikan"];
+      const sections = ["ringkasan", "geo", "gaji", "bagikan"];
       for (const section of sections) {
         const el = document.getElementById(section);
         if (el) {
@@ -47,8 +47,6 @@ export default function SectionNav() {
 
   const navItems = [
     { id: "ringkasan", label: "Ringkasan" },
-    { id: "aturan",   label: "Aturan" },
-    { id: "sinyal",   label: "Sinyal" },
     { id: "gaji",     label: "Gaji" },
     { id: "geo",      label: "Geo" },
     { id: "bagikan",  label: "Bagikan" },
