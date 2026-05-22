@@ -5,13 +5,13 @@ interface VerdictCardProps {
   verdict: {
     risk_level: string;
     ml_fraud_probability: number | null;
-    pmi_rule_score: number | null;
+    pmi_rule_score?: number | null;
   };
   summaryText: string;
 }
 
 export default function VerdictCard({ verdict, summaryText }: VerdictCardProps) {
-  const { risk_level, ml_fraud_probability, pmi_rule_score } = verdict;
+  const { risk_level, ml_fraud_probability } = verdict;
   const colorClass = getRiskColor(risk_level);
   const label = getRiskLabel(risk_level);
 
@@ -39,29 +39,16 @@ export default function VerdictCard({ verdict, summaryText }: VerdictCardProps) 
       </p>
 
       {/* Stats — Source Code Pro for numbers */}
-      {(ml_fraud_probability != null || pmi_rule_score != null) && (
+      {ml_fraud_probability != null && (
         <div className="flex items-center gap-6 border-t border-current/10 pt-4">
-          {ml_fraud_probability != null && (
-            <div>
-              <p className="font-sans text-[11px] font-medium uppercase tracking-[0.06em] opacity-50 mb-1">
-                Fraud Score
-              </p>
-              <p className="font-mono text-[28px] font-semibold leading-none tracking-tight">
-                {formatPct(ml_fraud_probability)}
-              </p>
-            </div>
-          )}
-          {pmi_rule_score != null && (
-            <div>
-              <p className="font-sans text-[11px] font-medium uppercase tracking-[0.06em] opacity-50 mb-1">
-                Skor PMI
-              </p>
-              <p className="font-mono text-[28px] font-semibold leading-none tracking-tight">
-                {pmi_rule_score}
-                <span className="text-sm font-normal opacity-40">/100</span>
-              </p>
-            </div>
-          )}
+          <div>
+            <p className="font-sans text-[11px] font-medium uppercase tracking-[0.06em] opacity-50 mb-1">
+              Fraud Score
+            </p>
+            <p className="font-mono text-[28px] font-semibold leading-none tracking-tight">
+              {formatPct(ml_fraud_probability)}
+            </p>
+          </div>
         </div>
       )}
     </div>
