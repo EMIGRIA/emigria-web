@@ -15,34 +15,42 @@ export const analyze = async (req, res) => {
     // 2. Extract structured data via Gemini
     const geminiResult = await geminiService.extract(payload);
 
-    // 3. Run geo risk and reality check in parallel (constants-based lookup)
-    const [geoResult, realityResult] = await Promise.all([
-      geoRiskService.analyze(
-        geminiResult.extracted_data.country
+    // 3. Parse potentially multi-country string from Gemini
+    const rawCountry = geminiResult.extracted_data.country || '';
+    const countries = rawCountry.split(/,\s*/).filter(Boolean);
+    const primaryCountry = countries[0] || rawCountry;
+
+    // 4. Run geo risk (per-country) and reality check in parallel
+    const [geoResults, realityResult] = await Promise.all([
+      // Analyze each country individually, always returns an array
+      Promise.all(
+        countries.length > 0
+          ? countries.map(c => geoRiskService.analyze(c.trim()))
+          : [geoRiskService.analyze(rawCountry)]
       ),
       realityCheckService.analyze(
-        geminiResult.extracted_data.country,
+        primaryCountry,
         geminiResult.extracted_data.title,
         geminiResult.extracted_data.salary_range,
         geminiResult.extracted_data.salary_currency
       ),
     ]);
 
-    // 4. Run ML prediction via FastAPI
+    // 5. Run ML prediction via FastAPI
     const mlResult = await mlService.predict(
       geminiResult.extracted_data
     );
 
-    // 5. Generate scan ID
+    // 6. Generate scan ID
     const scanId = nanoid(10);
 
-    // 6. Format final response
+    // 7. Format final response
     const finalResponse = responseFormatter.format({
       scanId,
       inputType: payload.type,
       geminiResult,
       mlResult,
-      geoResult,
+      geoResults,
       realityResult,
     });
 

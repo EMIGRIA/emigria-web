@@ -12,13 +12,25 @@ import { ML_SERVICE_URL } from '../config/env.js';
 
 const FALLBACK_RESULT = {
   ml_fraud_probability: null,
+  ml_fraud_percentage: null,
   ml_fraud_prediction: null,
   pmi_rule_score: null,
+  pmi_normalized_score: null,
+  pmi_risk_percentage: null,
+  pmi_rule_prediction: null,
   triggered_rules: [],
+  hard_stop_triggered: false,
+  hard_stop_count: 0,
   fraud_prediction: null,
   risk_level: 'UNKNOWN',
+  final_risk_score: null,
+  final_risk_percentage: null,
   threshold: null,
   pmi_rule_threshold: null,
+  review_threshold: null,
+  high_risk_threshold: null,
+  ml_weight: null,
+  pmi_weight: null,
   is_fallback: true,
 };
 

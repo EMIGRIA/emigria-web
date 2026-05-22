@@ -23,26 +23,7 @@ Use this exact JSON schema:
     "telecommuting": 0,
     "has_company_logo": 0,
     "has_questions": 0,
-    "extra": {
-      "risk_signals": {
-        "mentions_tourist_visa": false,
-        "mentions_pilgrimage_visa": false,
-        "asks_for_passport": false,
-        "asks_upfront_payment": false,
-        "mentions_admin_fee": false,
-        "promises_fast_process": false,
-        "promises_high_salary": false,
-        "no_experience_required": false,
-        "no_degree_required": false,
-        "uses_personal_contact": false,
-        "company_identity_clear": false,
-        "salary_claim_unrealistic": false,
-        "urgency_level": "low",
-        "risk_keywords": []
-      }
-    }
-  }
-}
+    
 Rules:
 1. Return valid JSON only.
 2. Do not invent information that is not present.
@@ -57,18 +38,7 @@ Rules:
 11. Set "company_identity_clear" to true only if company name, profile, address, or official identity is clear.
 12. Set "uses_personal_contact" to true if the job uses WhatsApp, personal phone number, personal email, Gmail/Yahoo/Hotmail, or informal contact as the main application method.
 13. Set "urgency_level" to one of: "low", "medium", "high".
-14. Fill "risk_keywords" with exact suspicious phrases found in the input.
-Risk signal definitions:
-- "mentions_tourist_visa": true if text mentions visa turis, tourist visa, visa kunjungan, or similar.
-- "mentions_pilgrimage_visa": true if text mentions visa ziarah, visa umroh, pilgrimage visa, or similar.
-- "asks_for_passport": true if text asks user to send passport, KTP, personal documents, or identity documents before official process.
-- "asks_upfront_payment": true if text asks payment before departure, deposit, transfer, booking fee, or upfront cost.
-- "mentions_admin_fee": true if text mentions biaya administrasi, admin fee, processing fee, or similar.
-- "promises_fast_process": true if text mentions proses cepat, langsung berangkat, immediate departure, fast process.
-- "promises_high_salary": true if text emphasizes very high salary, gaji besar, income guarantee, unrealistic earning.
-- "no_experience_required": true if text says tanpa pengalaman, no experience, no experience required.
-- "no_degree_required": true if text says tanpa ijazah, no degree, no education required.
-- "salary_claim_unrealistic": true if salary appears unusually high compared to typical migrant worker jobs, especially when combined with no experience or fast process.`;
+14. Fill "risk_keywords" with exact suspicious phrases found in the input.`;
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
