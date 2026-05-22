@@ -16,13 +16,9 @@ function getRiskLevel(mlResult, geoResult) {
 }
 
 // Generate an automatic summary text in Indonesian
-function generateSummaryText(riskLevel, triggeredRules) {
+function generateSummaryText(riskLevel) {
   if (riskLevel === 'high' || riskLevel === 'critical') {
-    return (
-      'Lowongan ini terindikasi penipuan. ' +
-      'Ditemukan ' + triggeredRules.length + ' red flag: ' +
-      triggeredRules.slice(0, 2).join(', ') + '.'
-    );
+    return 'Lowongan ini terindikasi penipuan.';
   }
   if (riskLevel === 'low') {
     return (
@@ -99,15 +95,19 @@ export function format({ scanId, inputType, geminiResult, mlResult, geoResult, r
     geo_risk: {
       country: geoResult.country,
       data_available: geoResult.data_available,
+      iso3: geoResult.iso3,
+      year: geoResult.year,
       risk_level: geoResult.risk_level,
       risk_score: geoResult.risk_score,
-      fraud_rate: geoResult.fraud_rate,
-      nearest_kbri: geoResult.nearest_kbri,
-      kbri_distance_note: geoResult.kbri_distance_note,
       crime_index: geoResult.crime_index,
+      crime_level: geoResult.crime_level,
+      crime_variation: geoResult.crime_variation,
+      crime_rankings: geoResult.crime_rankings,
+      crime_historical: geoResult.crime_historical,
+      source_note: geoResult.source_note,
     },
     smart_action: {
-      summary_text: generateSummaryText(riskLevel, triggeredRules),
+      summary_text: generateSummaryText(riskLevel),
       share_text: generateShareText(riskLevel, title, country, triggeredRules, realityResult),
     },
   };
