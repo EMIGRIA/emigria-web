@@ -22,6 +22,7 @@ export const analyze = async (req, res) => {
       ),
       realityCheckService.analyze(
         geminiResult.extracted_data.country,
+        geminiResult.extracted_data.title,
         geminiResult.extracted_data.salary_range,
         geminiResult.extracted_data.salary_currency
       ),
