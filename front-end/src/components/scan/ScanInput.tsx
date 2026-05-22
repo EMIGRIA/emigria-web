@@ -46,7 +46,11 @@ export default function ScanInput() {
   return (
     <>
       {loading && <LoadingOverlay />}
-      <div className="bg-brand-surface rounded-2xl p-6 shadow-2xl border border-border-main space-y-6">
+      <div
+        className={`bg-brand-surface rounded-2xl p-6 shadow-2xl border border-border-main space-y-6 transition-all duration-300 ${
+          loading ? "opacity-0 pointer-events-none select-none" : ""
+        }`}
+      >
         {/* Tab switcher */}
         <div className="flex bg-brand-deep p-1.5 rounded-xl border border-border-main">
           <button
