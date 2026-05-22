@@ -74,6 +74,10 @@ export default function Result() {
     smart_action,
   } = result;
 
+  // Normalize geo_risk to always be an array (backend now returns array,
+  // but this also handles legacy single-object responses gracefully)
+  const geoRisks = Array.isArray(geo_risk) ? geo_risk : [geo_risk];
+
   return (
     <div className="min-h-screen bg-brand-deep flex flex-col pb-20 transition-colors duration-300">
       <Navbar />
@@ -93,9 +97,9 @@ export default function Result() {
           <RealityCheck realityCheck={reality_check} />
         </RevealSection>
 
-        {/* F - Geographical Risk */}
+        {/* F - Geographical Risk (supports multi-country carousel) */}
         <RevealSection id="geo">
-          <GeoRiskCard geoRisk={geo_risk} />
+          <GeoRiskCard geoRisks={geoRisks} />
         </RevealSection>
 
         {/* G - Actionable Sharing CTA */}
