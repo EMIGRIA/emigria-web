@@ -3,8 +3,6 @@ import { useLocation, Navigate } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
 import VerdictCard from "../components/result/VerdictCard";
 import SectionNav from "../components/result/SectionNav";
-import TriggeredRules from "../components/result/TriggeredRules";
-import RiskSignalList from "../components/result/RiskSignalList";
 import GeoRiskCard from "../components/result/GeoRiskCard";
 import RealityCheck from "../components/result/RealityCheck";
 import ShareButton from "../components/result/ShareButton";
@@ -71,8 +69,6 @@ export default function Result() {
 
   const {
     verdict,
-    triggered_rules,
-    risk_signals,
     reality_check,
     geo_risk,
     smart_action,
@@ -90,15 +86,7 @@ export default function Result() {
         {/* B - Hero Verdict Card */}
         <VerdictCard verdict={verdict} summaryText={smart_action.summary_text} />
 
-        {/* C - Triggered Rules */}
-        <RevealSection id="aturan">
-          <TriggeredRules rules={triggered_rules} />
-        </RevealSection>
 
-        {/* D - Risk Signals Checklist */}
-        <RevealSection id="sinyal">
-          <RiskSignalList signals={risk_signals} />
-        </RevealSection>
 
         {/* E - Salary Reality Check */}
         <RevealSection id="gaji">
