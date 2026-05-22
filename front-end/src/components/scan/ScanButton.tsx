@@ -13,7 +13,7 @@ export default function ScanButton({ onClick, loading, disabled }: ScanButtonPro
     >
       {loading ? (
         <>
-          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-5 h-5 border-2 border-white spinner-dark border-t-transparent rounded-full animate-spin"></div>
           <span>Menganalisis...</span>
         </>
       ) : (
