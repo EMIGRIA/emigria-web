@@ -28,8 +28,8 @@
 }
 
 :root {
-  --brand-green: #00ed64; /* bright green pill */
-  --brand-green-dark: #00684a; /* primary dark teal-green */
+  --brand-green: #0e8038; /* vibrant bright green in light mode */
+  --brand-green-dark: #0e8038; /* readable bright green for text */
   --brand-green-soft: #c3f0d2;
 
   --bg-primary: #f0f2f4; /* canvas — slightly darker for readability */
@@ -39,7 +39,7 @@
   --text-muted: #5a6c7a; /* darker stone */
   --border-color: #c5cdd4; /* stronger hairline */
 
-  --risk-low: #16a34a;      /* green */
+  --risk-low: #0e8038;      /* vibrant green for low risk */
   --risk-medium: #ea6c00;   /* orange — readable on light bg */
   --risk-high: #dc2626;     /* red */
   --risk-critical: #dc2626; /* same as high */
@@ -48,8 +48,8 @@
 
 /* Dark mode overrides */
 .dark {
-  --brand-green: #00ed64;
-  --brand-green-dark: #00ed64; /* in dark mode, brand primary is bright green */
+  --brand-green: #00cb55;
+  --brand-green-dark: #00cb55; /* in dark mode, brand primary is bright green */
   --bg-primary: #001e2b; /* brand-teal-deep */
   --bg-surface: #0a2633; /* slightly lighter teal */
   --text-primary: #ffffff;
@@ -57,7 +57,7 @@
   --text-muted: #5c6c7a;
   --border-color: #1c2d38; /* dark border hairline */
 
-  --risk-low: #00ed64;       /* bright green */
+  --risk-low: #00cb55;       /* bright green */
   --risk-medium: #fa6e39;    /* orange */
   --risk-high: #ef4444;      /* red */
   --risk-critical: #ef4444;  /* same as high */
@@ -144,6 +144,59 @@ h1, h2, h3, h4, h5, h6 {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* Document Scan Keyframes */
+@keyframes scanSweep {
+  0% {
+    top: 0%;
+    opacity: 0.7;
+  }
+  50% {
+    top: 100%;
+    opacity: 1;
+  }
+  100% {
+    top: 0%;
+    opacity: 0.7;
+  }
+}
+
+@keyframes scanShine {
+  0%, 100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.animate-scan-line {
+  animation: scanSweep 3s ease-in-out infinite;
+}
+
+.animate-scan-shine {
+  animation: scanShine 3s ease-in-out infinite;
+}
+
+.bg-dot-grid {
+  background-image: radial-gradient(currentColor 1.5px, transparent 1.5px);
+  background-size: 14px 14px;
+  color: rgba(0, 30, 43, 0.08);
+}
+
+.dark .bg-dot-grid {
+  color: rgba(255, 255, 255, 0.06);
+}
+
+.bg-scan-bay {
+  background-color: #27272a; /* classic neutral dark grey (zinc-800) in light mode */
+  color: rgba(255, 255, 255, 0.08) !important; /* light coordinate dots */
+}
+
+.dark .bg-scan-bay {
+  background-color: #18181b; /* deep neutral dark charcoal (zinc-900) in dark mode */
+  color: rgba(255, 255, 255, 0.05) !important;
 }
 
 .hero-headline {
@@ -254,7 +307,8 @@ h1, h2, h3, h4, h5, h6 {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
   }
   html {
     @apply font-sans;
