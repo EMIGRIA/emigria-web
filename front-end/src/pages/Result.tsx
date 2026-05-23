@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { useLocation, Navigate } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
 import VerdictCard from "../components/result/VerdictCard";
-import SectionNav from "../components/result/SectionNav";
 import GeoRiskCard from "../components/result/GeoRiskCard";
 import RealityCheck from "../components/result/RealityCheck";
 import ShareButton from "../components/result/ShareButton";
@@ -79,33 +78,46 @@ export default function Result() {
   const geoRisks = Array.isArray(geo_risk) ? geo_risk : [geo_risk];
 
   return (
-    <div className="min-h-screen bg-brand-deep flex flex-col pb-20 transition-colors duration-300">
+    <div className="min-h-screen bg-brand-deep flex flex-col pb-10 lg:pb-6 transition-colors duration-300">
       <Navbar />
 
       {/* Scrollable analysis content */}
-      <main className="flex-1 px-4 py-5 max-w-2xl mx-auto w-full space-y-3">
-        {/* A - Sticky Section Nav (appears after VerdictCard exits) */}
-        <SectionNav />
+      <main className="flex-1 px-4 md:px-8 py-4 md:py-6 lg:pt-8 lg:pb-8 max-w-7xl mx-auto w-full space-y-6">
+        {/* Dashboard Responsive Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* Left Column - Main Verdict, Salary & Actions */}
+          <div className="lg:col-span-5 flex flex-col gap-6">
+            {/* B - Hero Verdict Card */}
+            <VerdictCard verdict={verdict} summaryText={smart_action.summary_text} />
 
-        {/* B - Hero Verdict Card */}
-        <VerdictCard verdict={verdict} summaryText={smart_action.summary_text} />
+            {/* E - Salary Reality Check */}
+            <RevealSection id="gaji">
+              <RealityCheck realityCheck={reality_check} />
+            </RevealSection>
 
+            {/* G - Actionable Sharing CTA (Desktop only) */}
+            <div className="hidden lg:block">
+              <RevealSection id="bagikan">
+                <ShareButton shareText={smart_action.share_text} />
+              </RevealSection>
+            </div>
+          </div>
 
+          {/* Right Column - Geography & In-depth Analytics (Sticky on Desktop) */}
+          <div className="lg:col-span-7 lg:sticky lg:top-20 self-start transition-all duration-300">
+            {/* F - Geographical Risk (supports multi-country carousel) */}
+            <RevealSection id="geo">
+              <GeoRiskCard geoRisks={geoRisks} />
+            </RevealSection>
 
-        {/* E - Salary Reality Check */}
-        <RevealSection id="gaji">
-          <RealityCheck realityCheck={reality_check} />
-        </RevealSection>
-
-        {/* F - Geographical Risk (supports multi-country carousel) */}
-        <RevealSection id="geo">
-          <GeoRiskCard geoRisks={geoRisks} />
-        </RevealSection>
-
-        {/* G - Actionable Sharing CTA */}
-        <RevealSection id="bagikan">
-          <ShareButton shareText={smart_action.share_text} />
-        </RevealSection>
+            {/* G - Actionable Sharing CTA (Mobile only - placed after geo risk) */}
+            <div className="block lg:hidden mt-6">
+              <RevealSection id="bagikan-mobile">
+                <ShareButton shareText={smart_action.share_text} />
+              </RevealSection>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   );

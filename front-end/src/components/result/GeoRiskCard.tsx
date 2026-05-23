@@ -144,7 +144,7 @@ function CountrySlide({ geoRisk }: { geoRisk: GeoRisk }) {
       </div>
 
       {/* Main Layout Grid: Live Map and Metrics side-by-side with exact equal heights */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch shrink-0 lg:mb-3">
 
         {/* Left Column: Live Map (exact height 220px) */}
         <div className="h-[220px]">
@@ -155,9 +155,9 @@ function CountrySlide({ geoRisk }: { geoRisk: GeoRisk }) {
         <div className="flex flex-col gap-3 h-[220px] justify-between">
 
           {/* Row 1: Crime Index + Tingkat (equal heights) */}
-          <div className="grid grid-cols-2 gap-3 h-[96px]">
+          <div className="grid grid-cols-2 gap-3 h-[100px]">
             {/* Crime Index Card */}
-            <div className="bg-brand-deep/20 rounded-lg p-3 border border-border-main/50 flex flex-col justify-between transition-all duration-300 hover:border-brand-green/30">
+            <div className="bg-brand-deep/30 dark:bg-brand-deep/10 rounded-xl p-4 border border-border-main/60 dark:border-border-main/20 flex flex-col justify-between shadow-xs hover:border-brand-green/30 dark:hover:border-brand-green/40 hover:scale-[1.02] hover:bg-brand-deep/45 transition-all duration-300">
               <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.06em] text-text-sub/50">
                 Crime Index
               </p>
@@ -168,7 +168,7 @@ function CountrySlide({ geoRisk }: { geoRisk: GeoRisk }) {
             </div>
 
             {/* Tingkat Card */}
-            <div className="bg-brand-deep/20 rounded-lg p-3 border border-border-main/50 flex flex-col justify-between transition-all duration-300 hover:border-brand-green/30">
+            <div className="bg-brand-deep/30 dark:bg-brand-deep/10 rounded-xl p-4 border border-border-main/60 dark:border-border-main/20 flex flex-col justify-between shadow-xs hover:border-brand-green/30 dark:hover:border-brand-green/40 hover:scale-[1.02] hover:bg-brand-deep/45 transition-all duration-300">
               <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.06em] text-text-sub/50">
                 Tingkat
               </p>
@@ -185,7 +185,7 @@ function CountrySlide({ geoRisk }: { geoRisk: GeoRisk }) {
 
           {/* Row 2: Redesigned Crime Rankings Card */}
           {crime_rankings && (
-            <div className="bg-brand-deep/20 rounded-lg p-3 border border-border-main/50 flex-1 flex flex-col justify-between transition-all duration-300 hover:border-brand-green/30">
+            <div className="bg-brand-deep/30 dark:bg-brand-deep/10 rounded-xl p-4 border border-border-main/60 dark:border-border-main/20 flex-1 flex flex-col justify-between shadow-xs hover:border-brand-green/30 dark:hover:border-brand-green/40 hover:scale-[1.02] hover:bg-brand-deep/45 transition-all duration-300">
               <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.06em] text-text-sub/50">
                 Peringkat Kriminalitas
               </p>
@@ -246,7 +246,7 @@ function CountrySlide({ geoRisk }: { geoRisk: GeoRisk }) {
         const gradientId = `crimeGrad-${(country || "unknown").replace(/\s+/g, "-")}`;
 
         return (
-          <div className="bg-brand-deep/20 rounded-lg p-4 border border-border-main/50 transition-all duration-300 hover:border-brand-green/30">
+          <div className="bg-brand-deep/30 dark:bg-brand-deep/10 rounded-xl p-5 border border-border-main/60 dark:border-border-main/20 shadow-xs hover:border-brand-green/30 dark:hover:border-brand-green/40 hover:scale-[1.01] hover:bg-brand-deep/40 transition-all duration-300">
             <div className="flex items-center justify-between mb-3">
               <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.06em] text-text-sub/50">
                 Tren Crime Index
@@ -359,13 +359,13 @@ export default function GeoRiskCard({ geoRisks }: GeoRiskCardProps) {
   return (
     <div
       id="geo"
-      className="bg-brand-surface rounded-xl border border-border-main overflow-hidden transition-all duration-300"
+      className="bg-brand-surface rounded-2xl border border-border-main/80 dark:border-border-main/30 overflow-hidden shadow-sm hover:shadow-md hover:border-brand-green/30 transition-all duration-300 ease-out cursor-default"
       onTouchStart={isMulti ? handleTouchStart : undefined}
       onTouchEnd={isMulti ? handleTouchEnd : undefined}
     >
 
       {/* Header Strip */}
-      <div className="flex items-center justify-between px-5 py-3 border-b border-border-main">
+      <div className="flex items-center justify-between px-6 py-4 border-b border-border-main/50">
         <div className="flex items-center gap-2">
           <MapPin className="w-3.5 h-3.5 text-text-sub shrink-0" />
           <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.07em] text-text-sub">
@@ -391,7 +391,7 @@ export default function GeoRiskCard({ geoRisks }: GeoRiskCardProps) {
 
       {/* Country Tabs (only for multi-country) */}
       {isMulti && (
-        <div className="px-5 pt-3 pb-1 flex items-center gap-1.5">
+        <div className="px-6 pt-4 pb-1 flex items-center gap-1.5">
           {/* Prev Arrow */}
           <button
             onClick={prev}
@@ -412,11 +412,11 @@ export default function GeoRiskCard({ geoRisks }: GeoRiskCardProps) {
                   key={idx}
                   onClick={() => goTo(idx)}
                   className={`
-                    shrink-0 px-3 py-1.5 rounded-lg font-sans text-[11px] font-semibold tracking-wide
-                    border transition-all duration-300 cursor-pointer
+                    shrink-0 px-3.5 py-1.5 rounded-full font-sans text-[11px] font-semibold tracking-wide
+                    border transition-all duration-300 cursor-pointer select-none hover:scale-[1.03] active:scale-[0.97]
                     ${isActive
                       ? `bg-brand-green/15 border-brand-green/40 text-brand-green shadow-sm shadow-brand-green/10`
-                      : `bg-brand-deep/20 border-border-main/40 text-text-sub/60 hover:border-border-main hover:text-text-sub`
+                      : `bg-brand-deep/20 border-border-main/40 text-text-sub/60 hover:border-border-main/70 hover:text-text-sub`
                     }
                   `}
                 >

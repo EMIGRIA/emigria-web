@@ -45,7 +45,14 @@ export default function ScanInput() {
 
   return (
     <>
-      {loading && <LoadingOverlay />}
+      {loading && (
+        <LoadingOverlay
+          mode={activeTab}
+          file={file}
+          text={text}
+          url={url}
+        />
+      )}
       <div
         className={`bg-brand-surface rounded-2xl p-6 shadow-2xl border border-border-main space-y-6 transition-all duration-300 ${
           loading ? "opacity-0 pointer-events-none select-none" : ""

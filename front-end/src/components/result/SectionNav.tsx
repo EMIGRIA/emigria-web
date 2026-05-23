@@ -53,7 +53,7 @@ export default function SectionNav() {
   ];
 
   return (
-    <div className="sticky top-[50px] z-40 bg-brand-deep/95 backdrop-blur-md border-b border-border-main py-3 scrollbar-none overflow-x-auto -mx-4 px-4 transition-colors duration-300">
+    <div className="sticky top-[50px] z-40 bg-brand-deep/95 backdrop-blur-md border-b border-border-main py-3 scrollbar-none overflow-x-auto -mx-4 px-4 transition-colors duration-300 lg:hidden">
       <div className="max-w-4xl mx-auto flex items-center gap-2 md:justify-center whitespace-nowrap">
         {navItems.map((item) => (
           <button

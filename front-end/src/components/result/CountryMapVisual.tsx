@@ -143,14 +143,14 @@ export default function CountryMapVisual({ countryName, riskLevel }: CountryMapV
 
   if (!mapInfo) {
     return (
-      <div className="w-full h-[220px] bg-brand-deep/30 rounded-lg border border-border-main/50 flex items-center justify-center">
+      <div className="w-full h-full bg-brand-deep/30 rounded-lg border border-border-main/50 flex items-center justify-center">
         <p className="font-sans text-xs text-text-sub/50">Peta tidak tersedia untuk {countryName}</p>
       </div>
     );
   }
 
   return (
-    <div className="relative w-full h-[220px] bg-brand-deep/30 rounded-lg border border-border-main/50 overflow-hidden flex items-center justify-center select-none shadow-inner">
+    <div className="relative w-full h-full bg-brand-deep/30 rounded-lg border border-border-main/50 overflow-hidden flex items-center justify-center select-none shadow-inner">
       {/* Container where MapLibre renders */}
       <div ref={mapContainerRef} className="w-full h-full absolute inset-0" />
 
