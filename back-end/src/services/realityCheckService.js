@@ -160,6 +160,30 @@ function parseSalary(salaryRange) {
 export function analyze(country, jobTitle, salaryRange, salaryCurrency) {
   // Parse offered salary using robust parseSalary function
   const offered = parseSalary(salaryRange);
+  let offCurr = (salaryCurrency || "IDR").toUpperCase();
+
+  // HEURISTIC 1: Check raw text for Indonesian currency keywords to override erroneous destination currency assumptions
+  if (salaryRange) {
+    const rawLower = String(salaryRange).toLowerCase();
+    if (
+      rawLower.includes('rp') ||
+      rawLower.includes('idr') ||
+      rawLower.includes('juta') ||
+      rawLower.includes('jt') ||
+      rawLower.includes('rupiah')
+    ) {
+      offCurr = "IDR";
+    }
+  }
+
+  // HEURISTIC 2: If the parsed salary value is >= 500,000, it is extremely likely to be IDR already.
+  // Override high-value foreign currencies (where monthly salary in millions is unrealistic) to IDR.
+  if (offered !== null && offered >= 500000) {
+    const highValueCurrencies = ['MYR', 'SGD', 'BND', 'SAR', 'TWD', 'HKD', 'USD', 'EUR', 'AED', 'CNY', 'PHP', 'THB', 'JPY'];
+    if (highValueCurrencies.includes(offCurr)) {
+      offCurr = "IDR";
+    }
+  }
 
   // Get jobs for the specific country from constants
   const canonicalCountry = country ? CANONICAL_COUNTRY_MAP[country.toLowerCase().trim()] : null;
@@ -172,7 +196,6 @@ export function analyze(country, jobTitle, salaryRange, salaryCurrency) {
     const realSalary = matchedJob.gaji;
     const realCurrency = matchedJob.currency || "IDR";
 
-    const offCurr = (salaryCurrency || "IDR").toUpperCase();
     const realCurr = realCurrency.toUpperCase();
 
     const rateOffered = EXCHANGE_RATES_TO_IDR[offCurr] || 1;
@@ -233,8 +256,6 @@ export function analyze(country, jobTitle, salaryRange, salaryCurrency) {
       source = `SISKOP2MI BP2MI - Rata-rata Regional ${canonicalCountry}`;
     }
   }
-
-  const offCurr = (salaryCurrency || "IDR").toUpperCase();
 
   if (offered === null) {
     return {
