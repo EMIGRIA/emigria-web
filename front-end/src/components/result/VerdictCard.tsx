@@ -1,4 +1,4 @@
-import { getRiskColor, getRiskLabel, formatPctDirect, formatPct } from "../../lib/riskUtils";
+import { getRiskColor, getRiskLabel, formatPctDirect, formatPct, formatTriggeredRule } from "../../lib/riskUtils";
 import { CheckCircle2, AlertTriangle, XCircle, ShieldAlert } from "lucide-react";
 
 interface VerdictCardProps {
@@ -9,9 +9,10 @@ interface VerdictCardProps {
     hard_stop_triggered?: boolean;
   };
   summaryText: string;
+  triggeredRules?: string[];
 }
 
-export default function VerdictCard({ verdict, summaryText }: VerdictCardProps) {
+export default function VerdictCard({ verdict, summaryText, triggeredRules = [] }: VerdictCardProps) {
   const { risk_level, ml_fraud_probability, final_risk_percentage, hard_stop_triggered } = verdict;
   const colorClass = getRiskColor(risk_level);
   const label = getRiskLabel(risk_level);
@@ -33,6 +34,20 @@ export default function VerdictCard({ verdict, summaryText }: VerdictCardProps) 
     if (l === "high" || l === "critical") return <XCircle className="w-4 h-4 text-risk-high" />;
     return <AlertTriangle className="w-4 h-4 text-text-muted" />;
   };
+
+  // Process rules Indonesian labels
+  const formattedRules = (triggeredRules || [])
+    .map(formatTriggeredRule)
+    .filter(Boolean);
+
+  // High-trust fallbacks if no specific ML rules triggered but classification was high
+  const displayRules = formattedRules.length > 0
+    ? formattedRules
+    : [
+        "Persyaratan lowongan kerja tidak mencantumkan lisensi SIP2MI resmi.",
+        "Metode rekrutmen tidak transparan / melalui perantara tidak resmi.",
+        "Deskripsi pekerjaan tidak spesifik / indikasi eksploitasi.",
+      ];
 
   return (
     <div
@@ -79,6 +94,23 @@ export default function VerdictCard({ verdict, summaryText }: VerdictCardProps) 
               style={{ width: `${numericPct}%` }}
             />
           </div>
+        </div>
+      )}
+
+      {/* Risk Signals / Reasons if High Risk */}
+      {(risk_level?.toLowerCase() === "high" || risk_level?.toLowerCase() === "critical") && (
+        <div className="border-t border-current/10 pt-4 mt-4 space-y-2.5">
+          <p className="font-sans text-[10px] font-bold uppercase tracking-[0.08em] opacity-60">
+            Faktor Risiko Terdeteksi:
+          </p>
+          <ul className="space-y-2">
+            {displayRules.map((rule, idx) => (
+              <li key={idx} className="flex items-start gap-2 text-xs font-semibold leading-relaxed opacity-95">
+                <span className="text-risk-high dark:text-red-400 font-extrabold shrink-0 mt-0.5">•</span>
+                <span>{rule}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>

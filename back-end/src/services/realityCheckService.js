@@ -1,28 +1,29 @@
 import { SALARY_STANDARD_IDR } from '../data/realityCheckData.js';
 
 // Professional exchange rate table for cross-currency comparison (to IDR)
+// Updated to 2025 average rates
 const EXCHANGE_RATES_TO_IDR = {
   IDR: 1,
-  MYR: 3500,
-  SGD: 11800,
-  BND: 11800,
-  SAR: 4200,
-  TWD: 500,
-  HKD: 2000,
-  KRW: 12,
-  JPY: 100,
-  USD: 16000,
-  EUR: 17200,
-  AED: 4300,
-  CNY: 2200,
-  PHP: 280,
-  THB: 440,
-  VND: 0.65,
+  MYR: 3850,
+  SGD: 12610,
+  BND: 12610,
+  SAR: 4392,
+  TWD: 540,
+  HKD: 2113,
+  KRW: 11.6,
+  JPY: 110,
+  USD: 16473,
+  EUR: 18628,
+  AED: 4486,
+  CNY: 2300,
+  PHP: 290,
+  THB: 470,
+  VND: 0.67,
   LAK: 0.75,
   MMK: 7.6,
+  NT: 540,   // Alias for TWD (commonly written as "NT" on brochures)
 };
 
-// Canonical country map to align English/Indonesian inputs with constants.js keys
 const CANONICAL_COUNTRY_MAP = {
   'singapore': 'Singapura',
   'philippines': 'Filipina',
@@ -54,241 +55,320 @@ const CANONICAL_COUNTRY_MAP = {
   'timor leste': 'Timor-Leste',
 };
 
-// Robust fuzzy, case-insensitive job matching
-function findMatchingJob(countryJobs, title) {
-  if (!title || !countryJobs) return null;
-  const normalizedTitle = title.toLowerCase().trim();
-  
-  // 1. Exact match (case insensitive)
-  for (const job of Object.keys(countryJobs)) {
-    if (job.toLowerCase() === normalizedTitle) {
-      return { jobName: job, ...countryJobs[job] };
-    }
-  }
-  
-  // 2. Fuzzy match (substring match)
-  for (const job of Object.keys(countryJobs)) {
-    const jobLower = job.toLowerCase();
-    if (jobLower.includes(normalizedTitle) || normalizedTitle.includes(jobLower)) {
-      return { jobName: job, ...countryJobs[job] };
-    }
-  }
-  
-  // 3. Word overlap match
-  const titleWords = normalizedTitle.split(/\s+/).filter(w => w.length > 3);
-  if (titleWords.length > 0) {
-    for (const job of Object.keys(countryJobs)) {
-      const jobLower = job.toLowerCase();
-      if (titleWords.some(word => jobLower.includes(word))) {
-        return { jobName: job, ...countryJobs[job] };
-      }
-    }
-  }
-  
+const COUNTRY_TO_STANDARD_CURRENCY = {
+  'Singapura': 'SGD', 'Filipina': 'PHP', 'Kamboja': 'KHR',
+  'Arab Saudi': 'SAR', 'Korea Selatan': 'KRW', 'Uni Emirat Arab': 'AED',
+  'Jepang': 'JPY', 'Malaysia': 'MYR', 'Brunei Darussalam': 'BND',
+  'Thailand': 'THB', 'Vietnam': 'VND', 'Laos': 'LAK',
+  'Myanmar': 'MMK', 'Taiwan': 'TWD', 'Hong Kong': 'HKD',
+};
+
+const HIGH_VALUE_CURRENCIES = ['MYR', 'SGD', 'BND', 'SAR', 'TWD', 'HKD', 'USD', 'EUR', 'AED', 'CNY', 'PHP', 'THB', 'JPY'];
+
+// Currency prefix patterns for foreign salary extraction
+const CURRENCY_PREFIXES = {
+  'TWD': /(?:nt|twd|nt\$|ntd)\s*\.?\s*/gi,
+  'MYR': /(?:rm|myr|ringgit)\s*\.?\s*/gi,
+  'SGD': /(?:sgd|s\$)\s*\.?\s*/gi,
+  'SAR': /(?:sar|riyal|rial|sr)\s*\.?\s*/gi,
+  'HKD': /(?:hkd|hk\$)\s*\.?\s*/gi,
+  'KRW': /(?:krw|won|₩)\s*\.?\s*/gi,
+  'JPY': /(?:jpy|yen|¥)\s*\.?\s*/gi,
+  'USD': /(?:usd|us\$|\$)\s*\.?\s*/gi,
+  'EUR': /(?:eur|€)\s*\.?\s*/gi,
+  'AED': /(?:aed|dirham|dhs)\s*\.?\s*/gi,
+  'BND': /(?:bnd|b\$)\s*\.?\s*/gi,
+};
+
+// --- Shared helpers ---
+
+/** Convert a currency amount to IDR */
+function toIdr(amount, currency) {
+  return amount * (EXCHANGE_RATES_TO_IDR[currency] || 1);
+}
+
+/** Compare offered vs standard and return a flag string (or null if OK) */
+function compareFlag(offeredIdr, standardIdr, flagTooHigh, flagTooLow) {
+  if (offeredIdr > standardIdr * 2) return flagTooHigh;
+  if (offeredIdr < standardIdr) return flagTooLow;
   return null;
 }
-// Robust parser for salary ranges/values (supporting 'juta', 'jt', 'million', 'mio')
-function parseSalary(salaryRange) {
-  if (salaryRange == null) return null;
-  const original = String(salaryRange);
-  const normalized = original.toLowerCase().trim();
 
-  // Check if it contains millions indicators
-  const hasJuta = normalized.includes('juta') || normalized.includes('jt') || normalized.includes('million') || normalized.includes('mio');
-
-  // Extract first group of numbers, dots, and commas
-  const matches = normalized.match(/[0-9]+([.,][0-9]+)*/g);
-  if (!matches || matches.length === 0) return null;
-
-  const firstNumStr = matches[0];
-  let parsedVal = null;
-
-  if (hasJuta) {
-    // Treat as a decimal number (like "13", "13.5", "13,5")
-    const cleaned = firstNumStr.replace(',', '.');
-    parsedVal = parseFloat(cleaned);
-    if (!isNaN(parsedVal)) {
-      parsedVal = parsedVal * 1000000;
-    }
-  } else {
-    const dotCount = (firstNumStr.match(/\./g) || []).length;
-    const commaCount = (firstNumStr.match(/,/g) || []).length;
-
-    if (dotCount > 1 || commaCount > 1) {
-      // Thousands separators
-      const cleaned = firstNumStr.replace(/[.,]/g, '');
-      parsedVal = parseFloat(cleaned);
-    } else if (dotCount === 1 && commaCount === 1) {
-      const dotIndex = firstNumStr.indexOf('.');
-      const commaIndex = firstNumStr.indexOf(',');
-      if (dotIndex < commaIndex) {
-        // IDR style: "13.000,00"
-        const cleaned = firstNumStr.replace(/\./g, '').replace(',', '.');
-        parsedVal = parseFloat(cleaned);
-      } else {
-        // EN style: "13,000.00"
-        const cleaned = firstNumStr.replace(/,/g, '');
-        parsedVal = parseFloat(cleaned);
-      }
-    } else if (dotCount === 1) {
-      const parts = firstNumStr.split('.');
-      if (parts[1].length === 3 && parseFloat(parts[0]) < 1000) {
-        // Thousands separator
-        parsedVal = parseFloat(firstNumStr.replace('.', ''));
-      } else {
-        // Decimal
-        parsedVal = parseFloat(firstNumStr);
-      }
-    } else if (commaCount === 1) {
-      const parts = firstNumStr.split(',');
-      if (parts[1].length === 3 && parseFloat(parts[0]) < 1000) {
-        // Thousands separator
-        parsedVal = parseFloat(firstNumStr.replace(',', ''));
-      } else {
-        // Decimal
-        parsedVal = parseFloat(firstNumStr.replace(',', '.'));
-      }
-    } else {
-      parsedVal = parseFloat(firstNumStr);
-    }
-  }
-
-  return parsedVal;
+/** Build the final result object (shared by matched-job and fallback paths) */
+function buildResult({ dataAvailable, offered, offCurr, standardMin, standardMax, source, flag, compareCurr }) {
+  const offeredIdr = offered !== null ? toIdr(offered, offCurr) : null;
+  return {
+    data_available: dataAvailable,
+    salary_is_realistic: offered !== null ? (flag === null) : null,
+    offered_salary_idr: offeredIdr,
+    standard_min_idr: standardMin,
+    standard_max_idr: standardMax,
+    source,
+    currency_note: (offered !== null && compareCurr && offCurr !== compareCurr)
+      ? `Mata uang dikonversi ke IDR untuk perbandingan (${offCurr} ${compareCurr ? `vs ${compareCurr}` : '-> IDR'})`
+      : null,
+    flag: offered !== null ? flag : "Gaji tidak dapat dideteksi dari brosur",
+  };
 }
 
-// Compare offered salary against BP2MI standard
-export function analyze(country, jobTitle, salaryRange, salaryCurrency) {
-  // Parse offered salary using robust parseSalary function
-  const offered = parseSalary(salaryRange);
+// --- Number parsing ---
+
+function parseValueString(numStr, hasJuta) {
+  if (hasJuta) {
+    const parsed = parseFloat(numStr.replace(',', '.'));
+    return isNaN(parsed) ? null : parsed * 1_000_000;
+  }
+  const dotCount = (numStr.match(/\./g) || []).length;
+  const commaCount = (numStr.match(/,/g) || []).length;
+
+  if (dotCount > 1 || commaCount > 1) {
+    return parseFloat(numStr.replace(/[.,]/g, ''));
+  }
+  if (dotCount === 1 && commaCount === 1) {
+    return numStr.indexOf('.') < numStr.indexOf(',')
+      ? parseFloat(numStr.replace(/\./g, '').replace(',', '.'))
+      : parseFloat(numStr.replace(/,/g, ''));
+  }
+  if (dotCount === 1) {
+    const parts = numStr.split('.');
+    return (parts[1].length === 3 && parseFloat(parts[0]) < 1000)
+      ? parseFloat(numStr.replace('.', ''))
+      : parseFloat(numStr);
+  }
+  if (commaCount === 1) {
+    const parts = numStr.split(',');
+    return (parts[1].length === 3 && parseFloat(parts[0]) < 1000)
+      ? parseFloat(numStr.replace(',', ''))
+      : parseFloat(numStr.replace(',', '.'));
+  }
+  return parseFloat(numStr);
+}
+
+// --- Salary extraction ---
+
+/** Detect if raw text contains BOTH foreign currency AND IDR amounts */
+function textContainsBothCurrencies(text) {
+  if (!text) return false;
+  const lower = text.toLowerCase();
+  const hasForeign = /\b(nt|twd|myr|sgd|sar|hkd|krw|jpy|usd|eur|aed|cny|php|thb|vnd|lak|mmk|bnd|rm|riyal|rial|dollar|won|yen|yuan|dirham|baht|dong|ringgit)\b/i.test(lower);
+  const hasIdr = /\b(rp\.?|idr|rupiah)\b/i.test(lower) || lower.includes('juta') || lower.includes('jt');
+  return hasForeign && hasIdr;
+}
+
+/** Check for "juta"/"jt" keywords (always IDR) */
+function hasJutaKeyword(text) {
+  const lower = text.toLowerCase();
+  return lower.includes('juta') || lower.includes('jt') || lower.includes('million') || lower.includes('mio');
+}
+
+/** Extract IDR equivalent from raw salary text (e.g. "Setara Rp. 15.500.000") */
+function extractIdrSalary(salaryRangeStr) {
+  if (!salaryRangeStr) return null;
+  const raw = String(salaryRangeStr);
+  const hasJuta = hasJutaKeyword(raw);
+
+  // 1. "setara" pattern — most explicit IDR equivalent
+  const setaraMatch = raw.match(/setara[\s\-\+~:=]*(?:rp\.?\s*)?([0-9]+(?:[.,][0-9]+)*)/i);
+  if (setaraMatch) {
+    const val = parseValueString(setaraMatch[1], hasJuta);
+    if (val !== null && val >= 100_000) return val;
+  }
+
+  // 2. "Rp" / "Rp." followed by number — collect ALL matches, pick largest
+  const rpRegex = /rp\.?\s*([0-9]+(?:[.,][0-9]+)*)/gi;
+  const rpCandidates = [];
+  let m;
+  while ((m = rpRegex.exec(raw)) !== null) {
+    const val = parseValueString(m[1], hasJuta);
+    if (val !== null && val > 0) rpCandidates.push(val);
+  }
+  if (rpCandidates.length > 0) {
+    const best = Math.max(...rpCandidates);
+    if (best >= 100_000) return best;
+  }
+
+  // 3. Standalone "juta"/"jt" without "Rp" prefix
+  if (hasJuta) {
+    const jutaMatch = raw.match(/([0-9]+(?:[.,][0-9]+)*)\s*(?:juta|jt)/i);
+    if (jutaMatch) {
+      const val = parseValueString(jutaMatch[1], true);
+      if (val !== null && val >= 1_000_000) return val;
+    }
+  }
+
+  // 4. "IDR" followed by number
+  const idrMatch = raw.match(/idr[\s.:]*([0-9]+(?:[.,][0-9]+)*)/i);
+  if (idrMatch) {
+    const val = parseValueString(idrMatch[1], hasJuta);
+    if (val !== null && val >= 100_000) return val;
+  }
+
+  return null;
+}
+
+/** Extract foreign currency salary value from text */
+function extractForeignSalary(salaryRangeStr, destinationCurrency) {
+  if (!salaryRangeStr || !destinationCurrency || destinationCurrency === 'IDR') return null;
+  const raw = String(salaryRangeStr);
+  const prefix = CURRENCY_PREFIXES[destinationCurrency];
+  if (!prefix) return null;
+
+  let m;
+  while ((m = prefix.exec(raw)) !== null) {
+    const afterPrefix = raw.substring(m.index + m[0].length);
+    const numMatch = afterPrefix.match(/^([0-9]+(?:[.,][0-9]+)*)/);
+    if (numMatch) {
+      const val = parseValueString(numMatch[1], false);
+      if (val !== null && val > 0) return { value: val, currency: destinationCurrency };
+    }
+  }
+  return null;
+}
+
+/** Simple first-number parser for fallback */
+function parseSalary(salaryRange) {
+  if (salaryRange == null) return null;
+  const normalized = String(salaryRange).toLowerCase().trim();
+  const hasJuta = hasJutaKeyword(normalized);
+  const matches = normalized.match(/[0-9]+([.,][0-9]+)*/g);
+  if (!matches || matches.length === 0) return null;
+  return parseValueString(matches[0], hasJuta);
+}
+
+// --- Job matching ---
+
+function findMatchingJob(countryJobs, title) {
+  if (!title || !countryJobs) return null;
+  const t = title.toLowerCase().trim();
+  const jobs = Object.keys(countryJobs);
+
+  // Exact → substring → word-overlap
+  const match = jobs.find(j => j.toLowerCase() === t)
+    || jobs.find(j => { const jl = j.toLowerCase(); return jl.includes(t) || t.includes(jl); })
+    || (() => {
+      const words = t.split(/\s+/).filter(w => w.length > 3);
+      return words.length > 0
+        ? jobs.find(j => words.some(w => j.toLowerCase().includes(w)))
+        : undefined;
+    })();
+
+  return match ? { jobName: match, ...countryJobs[match] } : null;
+}
+
+// --- Currency detection heuristics ---
+
+function detectCurrency(offered, salaryRange, salaryCurrency, canonicalCountry, hasBothCurrencies) {
   let offCurr = (salaryCurrency || "IDR").toUpperCase();
 
-  // HEURISTIC 1: Check raw text for Indonesian currency keywords to override erroneous destination currency assumptions
-  if (salaryRange) {
+  // HEURISTIC 1: IDR keywords override — only if no foreign currency also present
+  if (salaryRange && !hasBothCurrencies) {
     const rawLower = String(salaryRange).toLowerCase();
-    if (
-      rawLower.includes('rp') ||
-      rawLower.includes('idr') ||
-      rawLower.includes('juta') ||
-      rawLower.includes('jt') ||
-      rawLower.includes('rupiah')
-    ) {
+    if (['rp', 'idr', 'juta', 'jt', 'rupiah'].some(kw => rawLower.includes(kw))) {
       offCurr = "IDR";
     }
   }
 
-  // HEURISTIC 2: If the parsed salary value is >= 500,000, it is extremely likely to be IDR already.
-  // Override high-value foreign currencies (where monthly salary in millions is unrealistic) to IDR.
-  if (offered !== null && offered >= 500000) {
-    const highValueCurrencies = ['MYR', 'SGD', 'BND', 'SAR', 'TWD', 'HKD', 'USD', 'EUR', 'AED', 'CNY', 'PHP', 'THB', 'JPY'];
-    if (highValueCurrencies.includes(offCurr)) {
-      offCurr = "IDR";
+  // HEURISTIC 2: Value >= 500k is almost certainly IDR
+  if (offered !== null && offered >= 500_000 && HIGH_VALUE_CURRENCIES.includes(offCurr)) {
+    offCurr = "IDR";
+  }
+
+  // HEURISTIC 3: Value too low for IDR → must be destination currency
+  if (offered !== null && offered < 150_000 && canonicalCountry && canonicalCountry !== 'Indonesia') {
+    const standardCurr = COUNTRY_TO_STANDARD_CURRENCY[canonicalCountry];
+    if (standardCurr) {
+      const rawLower = salaryRange ? String(salaryRange).toLowerCase() : '';
+      const explicitlyIdr = !hasBothCurrencies && (rawLower.includes('rp') || rawLower.includes('idr') || rawLower.includes('rupiah'));
+      if (!explicitlyIdr) offCurr = standardCurr;
     }
   }
 
-  // Get jobs for the specific country from constants
+  return offCurr;
+}
+
+// --- Main export ---
+
+export function analyze(country, jobTitle, salaryRange, salaryCurrency) {
   const canonicalCountry = country ? CANONICAL_COUNTRY_MAP[country.toLowerCase().trim()] : null;
-  const countryJobs = canonicalCountry ? SALARY_STANDARD_IDR[canonicalCountry] : null;
+  const hasBothCurrencies = textContainsBothCurrencies(salaryRange);
 
-  // Attempt to match job title
+  // Step 1: Try to extract IDR salary directly (e.g. "Setara Rp 15.500.000")
+  let offered = extractIdrSalary(salaryRange);
+  let offCurr = "IDR";
+
+  // Step 2: Fallback — parse raw value and detect currency via heuristics
+  if (offered === null) {
+    const destCurrency = canonicalCountry ? COUNTRY_TO_STANDARD_CURRENCY[canonicalCountry] : null;
+
+    // Try foreign currency extraction + conversion when both currencies present
+    if (hasBothCurrencies && destCurrency && destCurrency !== 'IDR') {
+      const foreignResult = extractForeignSalary(salaryRange, destCurrency);
+      if (foreignResult) {
+        offered = Math.round(toIdr(foreignResult.value, foreignResult.currency));
+        offCurr = "IDR";
+      }
+    }
+
+    // Final fallback: parse first number + heuristic currency detection
+    if (offered === null) {
+      offered = parseSalary(salaryRange);
+      offCurr = detectCurrency(offered, salaryRange, salaryCurrency, canonicalCountry, hasBothCurrencies);
+    }
+  }
+
+  // Step 3: Look up standard salary data
+  const countryJobs = canonicalCountry ? SALARY_STANDARD_IDR[canonicalCountry] : null;
   const matchedJob = findMatchingJob(countryJobs, jobTitle);
 
   if (matchedJob) {
-    const realSalary = matchedJob.gaji;
-    const realCurrency = matchedJob.currency || "IDR";
+    const realCurr = (matchedJob.currency || "IDR").toUpperCase();
+    const realInIdr = toIdr(matchedJob.gaji, realCurr);
+    const offeredIdr = offered !== null ? toIdr(offered, offCurr) : null;
 
-    const realCurr = realCurrency.toUpperCase();
+    const flag = offeredIdr !== null
+      ? compareFlag(offeredIdr, realInIdr, "Gaji ditawarkan tidak realistis (terlalu tinggi)", "Gaji ditawarkan di bawah standar lowongan resmi SISKOP2MI")
+      : null;
 
-    const rateOffered = EXCHANGE_RATES_TO_IDR[offCurr] || 1;
-    const rateReal = EXCHANGE_RATES_TO_IDR[realCurr] || 1;
-
-    const realInIdr = realSalary * rateReal;
-
-    // Handle case where offered salary is not detected
-    if (offered === null) {
-      return {
-        data_available: true,
-        salary_is_realistic: null,
-        offered_salary_idr: null,
-        standard_min_idr: realInIdr,
-        standard_max_idr: realInIdr,
-        source: `SISKOP2MI BP2MI - Lowongan Resmi: ${matchedJob.jobName}`,
-        currency_note: null,
-        flag: "Gaji tidak dapat dideteksi dari brosur",
-      };
-    }
-
-    const offeredInIdr = offered * rateOffered;
-
-    let flag = null;
-    if (offeredInIdr > realInIdr * 2) {
-      flag = "Gaji ditawarkan tidak realistis (terlalu tinggi)";
-    } else if (offeredInIdr < realInIdr) {
-      flag = "Gaji ditawarkan di bawah standar lowongan resmi SISKOP2MI";
-    }
-
-    return {
-      data_available: true,
-      salary_is_realistic: flag === null,
-      offered_salary_idr: offeredInIdr,
-      standard_min_idr: realInIdr,
-      standard_max_idr: realInIdr,
+    return buildResult({
+      dataAvailable: true, offered, offCurr,
+      standardMin: realInIdr, standardMax: realInIdr,
       source: `SISKOP2MI BP2MI - Lowongan Resmi: ${matchedJob.jobName}`,
-      currency_note: offCurr !== realCurr ? `Mata uang dikonversi ke IDR untuk perbandingan (${offCurr} vs ${realCurr})` : null,
-      flag,
-    };
+      flag, compareCurr: realCurr,
+    });
   }
 
-  // Dynamic fallback: compute average salary from country-level jobs or use global default
-  let countryFallbackMin = 3000000;
-  let countryFallbackMax = 5000000;
+  // Step 4: Dynamic fallback — use country average
+  let fallbackMin = 3_000_000, fallbackMax = 5_000_000;
   let source = "BP2MI 2024 (estimasi)";
 
   if (countryJobs) {
-    const salariesInIdr = Object.entries(countryJobs).map(([jobName, data]) => {
-      const rate = EXCHANGE_RATES_TO_IDR[data.currency.toUpperCase()] || 1;
-      return data.gaji * rate;
-    }).filter(s => s > 0);
-
-    if (salariesInIdr.length > 0) {
-      const avg = salariesInIdr.reduce((a, b) => a + b, 0) / salariesInIdr.length;
-      countryFallbackMin = Math.round(avg * 0.8);
-      countryFallbackMax = Math.round(avg * 1.2);
+    const salaries = Object.values(countryJobs)
+      .map(d => toIdr(d.gaji, d.currency.toUpperCase()))
+      .filter(s => s > 0);
+    if (salaries.length > 0) {
+      const avg = salaries.reduce((a, b) => a + b, 0) / salaries.length;
+      fallbackMin = Math.round(avg * 0.8);
+      fallbackMax = Math.round(avg * 1.2);
       source = `SISKOP2MI BP2MI - Rata-rata Regional ${canonicalCountry}`;
     }
   }
 
-  if (offered === null) {
-    return {
-      data_available: false,
-      salary_is_realistic: null,
-      offered_salary_idr: null,
-      standard_min_idr: countryFallbackMin,
-      standard_max_idr: countryFallbackMax,
-      source,
-      currency_note: null,
-      flag: "Gaji tidak dapat dideteksi dari brosur",
-    };
-  }
+  const offeredIdr = offered !== null ? toIdr(offered, offCurr) : null;
+  const flag = offeredIdr !== null
+    ? compareFlag(offeredIdr, fallbackMax, "Gaji ditawarkan tidak realistis (terlalu tinggi)", "Gaji ditawarkan di bawah standar rata-rata BP2MI regional")
+    : null;
 
-  // Cross-currency conversion for dynamic regional fallback comparison
-  const rateOffered = EXCHANGE_RATES_TO_IDR[offCurr] || 1;
-  const offeredInIdr = offered * rateOffered;
+  // For fallback "too low" comparison, use fallbackMin instead of fallbackMax
+  const fallbackFlag = offeredIdr !== null
+    ? (offeredIdr > fallbackMax * 2 ? "Gaji ditawarkan tidak realistis (terlalu tinggi)" :
+       offeredIdr < fallbackMin ? "Gaji ditawarkan di bawah standar rata-rata BP2MI regional" : null)
+    : null;
 
-  let flag = null;
-  if (offeredInIdr > countryFallbackMax * 2) {
-    flag = "Gaji ditawarkan tidak realistis (terlalu tinggi)";
-  } else if (offeredInIdr < countryFallbackMin) {
-    flag = "Gaji ditawarkan di bawah standar rata-rata BP2MI regional";
-  }
-
-  return {
-    data_available: true,
-    salary_is_realistic: flag === null,
-    offered_salary_idr: offeredInIdr,
-    standard_min_idr: countryFallbackMin,
-    standard_max_idr: countryFallbackMax,
-    source,
-    currency_note: offCurr !== "IDR" ? `Mata uang dikonversi ke IDR untuk perbandingan (${offCurr} -> IDR)` : null,
-    flag,
-  };
+  return buildResult({
+    dataAvailable: offered !== null,
+    offered, offCurr,
+    standardMin: fallbackMin, standardMax: fallbackMax,
+    source, flag: fallbackFlag,
+    compareCurr: offCurr !== "IDR" ? "IDR" : null,
+  });
 }

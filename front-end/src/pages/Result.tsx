@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useLocation, Navigate } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
 import VerdictCard from "../components/result/VerdictCard";
+import OfficialDataStickyNote from "../components/result/OfficialDataStickyNote";
 import GeoRiskCard from "../components/result/GeoRiskCard";
 import RealityCheck from "../components/result/RealityCheck";
 import ShareButton from "../components/result/ShareButton";
@@ -71,6 +72,7 @@ export default function Result() {
     reality_check,
     geo_risk,
     smart_action,
+    triggered_rules,
   } = result;
 
   // Normalize geo_risk to always be an array (backend now returns array,
@@ -88,17 +90,25 @@ export default function Result() {
           {/* Left Column - Main Verdict, Salary & Actions */}
           <div className="lg:col-span-5 flex flex-col gap-6">
             {/* B - Hero Verdict Card */}
-            <VerdictCard verdict={verdict} summaryText={smart_action.summary_text} />
+            <VerdictCard
+              verdict={verdict}
+              summaryText={smart_action.summary_text}
+              triggeredRules={triggered_rules}
+            />
 
             {/* E - Salary Reality Check */}
             <RevealSection id="gaji">
               <RealityCheck realityCheck={reality_check} />
             </RevealSection>
 
-            {/* G - Actionable Sharing CTA (Desktop only) */}
-            <div className="hidden lg:block">
+            {/* G - Actionable Sharing CTA (Desktop only) + Sticky Note */}
+            <div className="hidden lg:flex flex-col gap-6">
               <RevealSection id="bagikan">
                 <ShareButton shareText={smart_action.share_text} />
+              </RevealSection>
+              
+              <RevealSection id="official-data">
+                <OfficialDataStickyNote geoRisks={geoRisks} />
               </RevealSection>
             </div>
           </div>
@@ -110,10 +120,14 @@ export default function Result() {
               <GeoRiskCard geoRisks={geoRisks} />
             </RevealSection>
 
-            {/* G - Actionable Sharing CTA (Mobile only - placed after geo risk) */}
-            <div className="block lg:hidden mt-6">
+            {/* G - Actionable Sharing CTA (Mobile only - placed after geo risk) + Sticky Note */}
+            <div className="block lg:hidden mt-6 space-y-6">
               <RevealSection id="bagikan-mobile">
                 <ShareButton shareText={smart_action.share_text} />
+              </RevealSection>
+
+              <RevealSection id="official-data-mobile">
+                <OfficialDataStickyNote geoRisks={geoRisks} />
               </RevealSection>
             </div>
           </div>

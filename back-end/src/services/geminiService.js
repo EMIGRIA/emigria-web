@@ -30,8 +30,8 @@ Rules:
 3. If a field is missing, use the default value from the schema.
 4. Keep text fields in the original language found in the poster.
 5. For "country", infer the destination country if clearly mentioned. Always use English country name.
-6. For "salary_range", preserve the salary text exactly as written, including currency if available.
-7. For "salary_currency": IDR/Rupiah → "IDR", MYR/Ringgit → "MYR", SAR/Riyal → "SAR", SGD → "SGD", TWD → "TWD", HKD → "HKD". Cannot be determined → null.
+6. For "salary_range", preserve the FULL salary text exactly as written, including ALL currencies and equivalents. If the text shows both foreign currency and IDR equivalent (e.g. "Gaji NT 28.590/Bln (Setara -+ Rp. 15.500.000,-)"), include the ENTIRE string with both amounts.
+7. For "salary_currency": Use the PRIMARY currency code (the destination country's currency). IDR/Rupiah → "IDR", MYR/Ringgit → "MYR", SAR/Riyal → "SAR", SGD → "SGD", TWD/NT → "TWD", HKD → "HKD", KRW/Won → "KRW", JPY/Yen → "JPY", AED/Dirham → "AED", BND → "BND". If the text shows BOTH a foreign currency AND an IDR equivalent, set salary_currency to the FOREIGN currency code (not IDR). Cannot be determined → null.
 8. Set "has_company_logo" to 1 only if a company logo is visible or explicitly mentioned. Otherwise 0.
 9. Set "has_questions" to 1 only if screening questions, interview questions, or application questions are present. Otherwise 0.
 10. Set "telecommuting" to 1 only if the job is remote/work from home. Otherwise 0.

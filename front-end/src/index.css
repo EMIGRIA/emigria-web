@@ -314,3 +314,79 @@ h1, h2, h3, h4, h5, h6 {
     @apply font-sans;
   }
 }
+
+@keyframes subtle-vibe {
+  0%, 100% { transform: rotate(-1.5deg) translateY(0); }
+  25% { transform: rotate(-1.9deg) translateY(-0.4px); }
+  50% { transform: rotate(-1.9deg) translateY(0); }
+  75% { transform: rotate(-1.5deg) translateY(0.4px); }
+}
+
+.animate-subtle-vibe {
+  animation: subtle-vibe 1.2s ease-in-out infinite;
+}
+
+@keyframes greenShine {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes blingPulse {
+  0%, 100% {
+    text-shadow: 0 0 4px rgba(14, 128, 56, 0.15);
+  }
+  50% {
+    text-shadow: 0 0 8px rgba(14, 128, 56, 0.3);
+  }
+}
+
+@keyframes blingPulseDark {
+  0%, 100% {
+    text-shadow: 0 0 5px rgba(0, 203, 85, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 10px rgba(0, 203, 85, 0.4);
+  }
+}
+
+.text-green-bling {
+  font-weight: inherit;
+  display: inline-block;
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
+  color: #0e8038;
+  background: linear-gradient(
+    120deg, 
+    #0e8038 30%, 
+    #1fb154 45%, 
+    #86efac 50%, 
+    #1fb154 55%, 
+    #0e8038 70%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: greenShine 5s linear infinite, blingPulse 3.5s ease-in-out infinite;
+}
+
+.dark .text-green-bling {
+  color: #00cb55;
+  background: linear-gradient(
+    120deg, 
+    #00cb55 30%, 
+    #3ce178 45%, 
+    #a7f3d0 50%, 
+    #3ce178 55%, 
+    #00cb55 70%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: greenShine 4.5s linear infinite, blingPulseDark 3s ease-in-out infinite;
+}

@@ -62,7 +62,10 @@ export default function RealityCheck({ realityCheck }: RealityCheckProps) {
                   Standar Gaji Negara Terkait
                 </p>
                 <p className="font-mono text-sm font-medium text-text-sub">
-                  {formatIDR(standard_min_idr)} – {formatIDR(standard_max_idr)}
+                  {standard_min_idr === standard_max_idr
+                    ? formatIDR(standard_min_idr)
+                    : `${formatIDR(standard_min_idr)} – ${formatIDR(standard_max_idr)}`
+                  }
                 </p>
               </div>
             )}

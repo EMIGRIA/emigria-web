@@ -7,31 +7,16 @@ interface ShareButtonProps {
 
 export default function ShareButton({ shareText }: ShareButtonProps) {
   const handleShare = async () => {
-    const payload = {
-      title: "Hasil Cek Emigria",
-      text: shareText,
-      url: window.location.href,
-    };
-
-    if (navigator.share) {
-      try {
-        await navigator.share(payload);
-        return;
-      } catch (e: any) {
-        if (e.name === "AbortError") return;
-      }
-    }
-
     try {
-      await navigator.clipboard.writeText(`${shareText}\n\n${window.location.href}`);
+      await navigator.clipboard.writeText(shareText);
       toast.success("Laporan berhasil disalin.");
     } catch {
-      toast.error("Gagal menyalin teks.");
+      toast.error("Gagal menyalin laporan.");
     }
   };
 
-  const waUrl = `https://wa.me/?text=${encodeURIComponent(`${shareText}\n\n${window.location.href}`)}`;
-
+  const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+3
   return (
     <div id="bagikan" className="bg-brand-surface rounded-2xl border border-border-main/80 dark:border-border-main/30 overflow-hidden shadow-sm hover:shadow-md hover:scale-[1.01] hover:border-brand-green/30 transition-all duration-300 ease-out cursor-default">
       {/* Header */}
@@ -63,7 +48,7 @@ export default function ShareButton({ shareText }: ShareButtonProps) {
             className="flex-1 flex items-center justify-center gap-2 border border-border-main hover:border-brand-green/40 hover:text-brand-green text-text-sub font-sans text-sm font-semibold py-2.5 px-4 rounded-full bg-transparent hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer select-none"
           >
             <Share2 className="w-4 h-4" />
-            Salin Tautan
+            Salin Laporan
           </button>
         </div>
       </div>

@@ -11,8 +11,8 @@ export default function Home() {
       <main className="flex-1 px-4 py-8 max-w-2xl mx-auto w-full flex flex-col justify-center space-y-8 pb-20 md:pb-12">
         {/* Hero Section */}
         <div className="text-center space-y-4">
-          <h1 className="hero-headline font-display text-3xl md:text-3xl lg:text-5xl font-bold leading-tight text-text-main tracking-tight">
-            Cek Lowongan Kerja Luar Negeri Sebelum Terlambat
+          <h1 className="hero-headline font-display text-3xl md:text-4xl lg:text-[34.5px] font-bold leading-tight text-text-main tracking-tight">
+            Verifikasi <span className="text-green-bling">Penipuan</span> Lowongan kerja migran dengan <span className="text-green-bling">Emigria</span> sebelum terlambat
           </h1>
           <p className="hero-sub font-sans text-xs md:text-sm text-text-sub max-w-md mx-auto leading-relaxed">
             Deteksi penipuan berbasis AI. Gratis. Tanpa daftar.

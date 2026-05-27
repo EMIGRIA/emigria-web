@@ -8,6 +8,12 @@ export const SALARY_STANDARD_IDR = {
       "currency": "MYR",
       "gaji": 1700
     },
+    "Construction Worker": { "currency": "MYR", "gaji": 1700, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "MYR", "gaji": 1700, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "MYR", "gaji": 1700, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "MYR", "gaji": 1700, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "MYR", "gaji": 1800, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "MYR", "gaji": 1800, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "MYR", "gaji": 1500, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "MYR", "gaji": 1700, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "MYR", "gaji": 1800, "dummy": true }, // dummy
@@ -55,6 +61,12 @@ export const SALARY_STANDARD_IDR = {
       "currency": "SGD",
       "gaji": 551
     },
+    "Construction Worker": { "currency": "SGD", "gaji": 1200, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "SGD", "gaji": 1200, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "SGD", "gaji": 1200, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "SGD", "gaji": 1200, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "SGD", "gaji": 950, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "SGD", "gaji": 950, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "SGD", "gaji": 750, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "SGD", "gaji": 850, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "SGD", "gaji": 950, "dummy": true }, // dummy
@@ -138,6 +150,12 @@ export const SALARY_STANDARD_IDR = {
       "currency": "BND",
       "gaji": 275
     },
+    "Construction Worker": { "currency": "BND", "gaji": 550, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "BND", "gaji": 550, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "BND", "gaji": 550, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "BND", "gaji": 550, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "BND", "gaji": 550, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "BND", "gaji": 550, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "BND", "gaji": 450, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "BND", "gaji": 500, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "BND", "gaji": 550, "dummy": true }, // dummy
@@ -188,6 +206,12 @@ export const SALARY_STANDARD_IDR = {
       "currency": "PHP",
       "gaji": 18000
     },
+    "Construction Worker": { "currency": "PHP", "gaji": 18000, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "PHP", "gaji": 18000, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "PHP", "gaji": 18000, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "PHP", "gaji": 18000, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "PHP", "gaji": 22000, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "PHP", "gaji": 22000, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "PHP", "gaji": 18000, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "PHP", "gaji": 20000, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "PHP", "gaji": 22000, "dummy": true }, // dummy
@@ -239,6 +263,12 @@ export const SALARY_STANDARD_IDR = {
       "currency": "THB",
       "gaji": 15000
     },
+    "Construction Worker": { "currency": "THB", "gaji": 15000, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "THB", "gaji": 15000, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "THB", "gaji": 15000, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "THB", "gaji": 15000, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "THB", "gaji": 18000, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "THB", "gaji": 18000, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "THB", "gaji": 15000, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "THB", "gaji": 16500, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "THB", "gaji": 18000, "dummy": true }, // dummy
@@ -290,6 +320,12 @@ export const SALARY_STANDARD_IDR = {
       "currency": "VND",
       "gaji": 9000000
     },
+    "Construction Worker": { "currency": "VND", "gaji": 9500000, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "VND", "gaji": 9500000, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "VND", "gaji": 9500000, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "VND", "gaji": 9500000, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "VND", "gaji": 11000000, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "VND", "gaji": 11000000, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "VND", "gaji": 9000000, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "VND", "gaji": 10000000, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "VND", "gaji": 11000000, "dummy": true }, // dummy
@@ -341,6 +377,12 @@ export const SALARY_STANDARD_IDR = {
       "currency": "LAK",
       "gaji": 3500000
     },
+    "Construction Worker": { "currency": "LAK", "gaji": 3800000, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "LAK", "gaji": 3800000, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "LAK", "gaji": 3800000, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "LAK", "gaji": 3800000, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "LAK", "gaji": 4200000, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "LAK", "gaji": 4200000, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "LAK", "gaji": 3500000, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "LAK", "gaji": 3800000, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "LAK", "gaji": 4200000, "dummy": true }, // dummy
@@ -392,6 +434,12 @@ export const SALARY_STANDARD_IDR = {
       "currency": "USD",
       "gaji": 350
     },
+    "Construction Worker": { "currency": "USD", "gaji": 350, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "USD", "gaji": 350, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "USD", "gaji": 350, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "USD", "gaji": 350, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "USD", "gaji": 450, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "USD", "gaji": 450, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "USD", "gaji": 350, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "USD", "gaji": 380, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "USD", "gaji": 450, "dummy": true }, // dummy
@@ -443,6 +491,12 @@ export const SALARY_STANDARD_IDR = {
       "currency": "MMK",
       "gaji": 500000
     },
+    "Construction Worker": { "currency": "MMK", "gaji": 500000, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "MMK", "gaji": 500000, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "MMK", "gaji": 500000, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "MMK", "gaji": 500000, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "MMK", "gaji": 600000, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "MMK", "gaji": 600000, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "MMK", "gaji": 500000, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "MMK", "gaji": 550000, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "MMK", "gaji": 600000, "dummy": true }, // dummy
@@ -494,6 +548,12 @@ export const SALARY_STANDARD_IDR = {
       "currency": "USD",
       "gaji": 300
     },
+    "Construction Worker": { "currency": "USD", "gaji": 300, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "USD", "gaji": 300, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "USD", "gaji": 300, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "USD", "gaji": 300, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "USD", "gaji": 380, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "USD", "gaji": 380, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "USD", "gaji": 300, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "USD", "gaji": 330, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "USD", "gaji": 380, "dummy": true }, // dummy
@@ -557,6 +617,12 @@ export const SALARY_STANDARD_IDR = {
       "currency": "SAR",
       "gaji": 1500
     },
+    "Construction Worker": { "currency": "SAR", "gaji": 1500, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "SAR", "gaji": 1500, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "SAR", "gaji": 1500, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "SAR", "gaji": 1500, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "SAR", "gaji": 1800, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "SAR", "gaji": 1800, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "SAR", "gaji": 1500, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "SAR", "gaji": 1700, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "SAR", "gaji": 1800, "dummy": true }, // dummy
@@ -660,6 +726,12 @@ export const SALARY_STANDARD_IDR = {
       "currency": "KRW",
       "gaji": 4000000
     },
+    "Construction Worker": { "currency": "KRW", "gaji": 2150000, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "KRW", "gaji": 2150000, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "KRW", "gaji": 2150000, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "KRW", "gaji": 2150000, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "KRW", "gaji": 2100000, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "KRW", "gaji": 2100000, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "KRW", "gaji": 2060740, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "KRW", "gaji": 2060740, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "KRW", "gaji": 2100000, "dummy": true }, // dummy
@@ -711,6 +783,12 @@ export const SALARY_STANDARD_IDR = {
       "currency": "CNY",
       "gaji": 4500
     },
+    "Construction Worker": { "currency": "CNY", "gaji": 4500, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "CNY", "gaji": 4500, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "CNY", "gaji": 4500, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "CNY", "gaji": 4500, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "CNY", "gaji": 5000, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "CNY", "gaji": 5000, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "CNY", "gaji": 5000, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "CNY", "gaji": 5500, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "CNY", "gaji": 5500, "dummy": true }, // dummy
@@ -786,6 +864,12 @@ export const SALARY_STANDARD_IDR = {
       "currency": "AED",
       "gaji": 1500
     },
+    "Construction Worker": { "currency": "AED", "gaji": 1600, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "AED", "gaji": 1600, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "AED", "gaji": 1600, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "AED", "gaji": 1600, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "AED", "gaji": 2000, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "AED", "gaji": 2000, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "AED", "gaji": 1500, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "AED", "gaji": 1800, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "AED", "gaji": 2200, "dummy": true }, // dummy
@@ -833,6 +917,12 @@ export const SALARY_STANDARD_IDR = {
       "currency": "TWD",
       "gaji": 0
     },
+    "Construction Worker": { "currency": "TWD", "gaji": 27470, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "TWD", "gaji": 27470, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "TWD", "gaji": 27470, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "TWD", "gaji": 27470, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "TWD", "gaji": 20000, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "TWD", "gaji": 20000, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "TWD", "gaji": 20000, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "TWD", "gaji": 22000, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "TWD", "gaji": 20000, "dummy": true }, // dummy
@@ -912,6 +1002,12 @@ export const SALARY_STANDARD_IDR = {
       "currency": "JPY",
       "gaji": 65591
     },
+    "Construction Worker": { "currency": "JPY", "gaji": 190000, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "JPY", "gaji": 190000, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "JPY", "gaji": 190000, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "JPY", "gaji": 190000, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "JPY", "gaji": 180000, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "JPY", "gaji": 180000, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "JPY", "gaji": 150000, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "JPY", "gaji": 170000, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "JPY", "gaji": 180000, "dummy": true }, // dummy
@@ -951,6 +1047,12 @@ export const SALARY_STANDARD_IDR = {
     "Patient Care Assistant": { "currency": "JPY", "gaji": 185000, "dummy": true } // dummy
   },
   "Hong Kong": {
+    "Construction Worker": { "currency": "HKD", "gaji": 11000, "dummy": true }, // dummy
+    "Pekerja Konstruksi": { "currency": "HKD", "gaji": 11000, "dummy": true }, // dummy
+    "Kontruksi": { "currency": "HKD", "gaji": 11000, "dummy": true }, // dummy
+    "Bidang Kontruksi": { "currency": "HKD", "gaji": 11000, "dummy": true }, // dummy
+    "Panti Jompo": { "currency": "HKD", "gaji": 5300, "dummy": true }, // dummy
+    "Elderly Care Worker": { "currency": "HKD", "gaji": 5300, "dummy": true }, // dummy
     "Asisten Rumah Tangga (ART)": { "currency": "HKD", "gaji": 4870, "dummy": true }, // dummy
     "Baby Sitter / Pengasuh Bayi": { "currency": "HKD", "gaji": 5200, "dummy": true }, // dummy
     "Care Giver / Pengasuh Lansia": { "currency": "HKD", "gaji": 5300, "dummy": true }, // dummy
