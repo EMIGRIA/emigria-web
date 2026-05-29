@@ -12,23 +12,17 @@ datasource db {
 }
 
 model ScanLog {
-  id               String   @id @default(uuid())
-  input_type       String
-  country          String?
-  title            String?
-  industry         String?
-  employment_type  String?
-  fraud_score      Float?
-  risk_level       String
-  geo_risk_score   Float?
-  geo_risk_level   String?
-  salary_realistic Boolean?
-  red_flags_count  Int      @default(0)
-  triggered_rules_count Int  @default(0)
-  telecommuting    Int?
-  has_company_logo Int?
-  has_questions    Int?
-  created_at       DateTime @default(now())
+  id                    String   @id @default(uuid())
+  input_type            String
+  country               String?
+  job_title             String?
+  salary                String?
+  company_name          String?
+  final_risk_percentage Float?
+  risk_level            String
+  geo_risk_level        String?
+  salary_realistic      Boolean?
+  created_at            DateTime @default(now())
 
   @@map("scan_logs")
 }
