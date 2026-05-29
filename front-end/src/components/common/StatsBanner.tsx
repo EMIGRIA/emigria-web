@@ -4,8 +4,8 @@ import { Search, ShieldAlert } from "lucide-react";
 export default function StatsBanner() {
   const { data } = useAnalytics();
 
-  const total = data?.total_scans ?? 1245;
-  const rate = data?.fraud_rate != null ? Math.round(data.fraud_rate * 100) : 38;
+  const total = data?.total_scans ?? 0;
+  const rate = data?.fraud_rate != null ? Math.round(data.fraud_rate * 100) : 0;
 
   // Localized total scans number formatting
   const formattedTotal = new Intl.NumberFormat("id-ID").format(total);
