@@ -74,19 +74,13 @@ export const ScanLogScalarFieldEnum = {
   id: 'id',
   input_type: 'input_type',
   country: 'country',
-  title: 'title',
-  industry: 'industry',
-  employment_type: 'employment_type',
-  fraud_score: 'fraud_score',
+  job_title: 'job_title',
+  salary: 'salary',
+  company_name: 'company_name',
+  final_risk_percentage: 'final_risk_percentage',
   risk_level: 'risk_level',
-  geo_risk_score: 'geo_risk_score',
   geo_risk_level: 'geo_risk_level',
   salary_realistic: 'salary_realistic',
-  red_flags_count: 'red_flags_count',
-  triggered_rules_count: 'triggered_rules_count',
-  telecommuting: 'telecommuting',
-  has_company_logo: 'has_company_logo',
-  has_questions: 'has_questions',
   created_at: 'created_at'
 } as const
 

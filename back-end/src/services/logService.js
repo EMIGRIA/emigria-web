@@ -6,23 +6,23 @@ export async function save(formattedResponse) {
     ? formattedResponse.geo_risk[0]
     : formattedResponse.geo_risk;
 
+  // Extract and clean company name (first line, max 80 chars)
+  const rawCompany = formattedResponse.extracted_data?.company_profile || null;
+  const companyName = rawCompany
+    ? rawCompany.split('\n')[0].trim().substring(0, 80)
+    : null;
+
   return await prisma.scanLog.create({
     data: {
       input_type: formattedResponse.input_type,
       country: primaryGeo?.country || null,
-      title: formattedResponse.extracted_data?.title || null,
-      industry: formattedResponse.extracted_data?.industry || null,
-      employment_type: formattedResponse.extracted_data?.employment_type || null,
-      fraud_score: formattedResponse.verdict?.fraud_score ?? null,
-      risk_level: formattedResponse.verdict?.risk_level || 'medium',
-      geo_risk_score: primaryGeo?.risk_score ?? null,
+      job_title: formattedResponse.extracted_data?.title || null,
+      salary: formattedResponse.extracted_data?.salary_range || null,
+      company_name: companyName,
+      final_risk_percentage: formattedResponse.verdict?.final_risk_percentage ?? null,
+      risk_level: formattedResponse.verdict?.risk_level || 'high',
       geo_risk_level: primaryGeo?.risk_level || null,
       salary_realistic: formattedResponse.reality_check?.salary_is_realistic ?? null,
-      red_flags_count: formattedResponse.reality_check?.red_flags_count ?? 0,
-      telecommuting: formattedResponse.extracted_data?.telecommuting ?? null,
-      has_company_logo: formattedResponse.extracted_data?.has_company_logo ?? null,
-      has_questions: formattedResponse.extracted_data?.has_questions ?? null,
-      triggered_rules_count: formattedResponse.triggered_rules?.length ?? 0,
     },
   });
 }
