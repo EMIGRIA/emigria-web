@@ -15,13 +15,21 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Toaster
           position="top-center"
           toastOptions={{
-            style: {
-              background: "#003D4F",
-              color: "#fff",
-              fontFamily: "Plus Jakarta Sans, sans-serif",
-              fontSize: "14px",
-              borderRadius: "12px",
-              border: "1px solid rgba(0,237,100,0.15)",
+            className: "emigria-toast",
+            duration: 4000,
+            success: {
+              className: "emigria-toast emigria-toast-success",
+              iconTheme: {
+                primary: "var(--brand-green)",
+                secondary: "transparent",
+              },
+            },
+            error: {
+              className: "emigria-toast emigria-toast-error",
+              iconTheme: {
+                primary: "var(--risk-high)",
+                secondary: "transparent",
+              },
             },
           }}
         />
