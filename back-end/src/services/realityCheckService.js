@@ -1,27 +1,25 @@
 import { SALARY_STANDARD_IDR } from '../data/realityCheckData.js';
 
-// Professional exchange rate table for cross-currency comparison (to IDR)
-// Updated to 2025 average rates
 const EXCHANGE_RATES_TO_IDR = {
   IDR: 1,
-  MYR: 3850,
-  SGD: 12610,
-  BND: 12610,
-  SAR: 4392,
-  TWD: 540,
-  HKD: 2113,
-  KRW: 11.6,
-  JPY: 110,
-  USD: 16473,
-  EUR: 18628,
-  AED: 4486,
-  CNY: 2300,
-  PHP: 290,
-  THB: 470,
-  VND: 0.67,
-  LAK: 0.75,
-  MMK: 7.6,
-  NT: 540,   // Alias for TWD (commonly written as "NT" on brochures)
+  MYR: 4485,    // Ringgit Malaysia — BI 29 Mei 2026
+  SGD: 13924,   // Dolar Singapura — BI 29 Mei 2026
+  BND: 13972,   // Dolar Brunei — XE/Wise 30 Mei 2026
+  SAR: 4741,    // Riyal Arab Saudi — BI 29 Mei 2026
+  TWD: 567,     // Dolar Taiwan — XE 30 Mei 2026
+  HKD: 2265,    // Dolar Hong Kong — Wise 30 Mei 2026
+  KRW: 11.83,   // Won Korea — BI 29 Mei 2026
+  JPY: 111.74,  // Yen Jepang — BI 29 Mei 2026 (per JPY; BI: per 100 JPY = 11.174)
+  USD: 17789,   // Dolar AS — BI 29 Mei 2026
+  EUR: 19500,   // Euro — estimasi Mei 2026
+  AED: 4844,    // Dirham UEA — BI 29 Mei 2026
+  CNY: 2621,    // Yuan Tiongkok — BI 29 Mei 2026
+  PHP: 290,     // Peso Filipina — Wise 30 Mei 2026
+  THB: 548,     // Baht Thailand — Wise 30 Mei 2026
+  VND: 0.678,   // Dong Vietnam — Wise 30 Mei 2026
+  LAK: 0.810,   // Kip Laos — XE 30 Mei 2026
+  MMK: 8.49,    // Kyat Myanmar — Wise 30 Mei 2026
+  NT: 567,      // Alias for TWD (commonly written as "NT" on brochures)
 };
 
 const CANONICAL_COUNTRY_MAP = {
@@ -339,7 +337,7 @@ export function analyze(country, jobTitle, salaryRange, salaryCurrency) {
 
   // Step 4: Dynamic fallback — use country average
   let fallbackMin = 3_000_000, fallbackMax = 5_000_000;
-  let source = "BP2MI 2024 (estimasi)";
+  let source = "BP2MI 2025 (estimasi)";
 
   if (countryJobs) {
     const salaries = Object.values(countryJobs)
