@@ -40,9 +40,33 @@ export function useScan() {
       navigate("/result", { state: { result: response.data } });
     } catch (err: any) {
       console.error(err);
-      toast.error(
-        err.response?.data?.message ?? "Terjadi kesalahan. Periksa koneksi."
-      );
+      
+      let errorMessage = "Terjadi kesalahan. Periksa koneksi internet Anda.";
+      
+      if (err.response) {
+        const status = err.response.status;
+        const serverMessage = err.response.data?.message;
+        
+        if (status === 429) {
+          errorMessage = "Terlalu banyak permintaan, coba lagi nanti.";
+        } else if (status >= 500) {
+          errorMessage = "Layanan AI sedang bermasalah, silakan coba lagi nanti.";
+        } else if (status === 400 || serverMessage === "Validation failed") {
+          if (mode === "url") {
+            errorMessage = "Format tautan (URL) tidak valid. Pastikan tautan lengkap dan benar.";
+          } else if (mode === "text") {
+            errorMessage = "Teks lowongan tidak valid atau terlalu pendek.";
+          } else {
+            errorMessage = "Format berkas brosur tidak valid atau tidak terbaca.";
+          }
+        } else {
+          errorMessage = serverMessage ?? "Gagal menganalisis lowongan kerja.";
+        }
+      } else if (err.request) {
+        errorMessage = "Koneksi terputus. Pastikan internet Anda aktif.";
+      }
+      
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
