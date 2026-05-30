@@ -32,6 +32,12 @@ export default function ScanInput() {
         toast.error("Silakan tempel tautan lowongan terlebih dahulu.");
         return;
       }
+      // Simple URL validation pattern
+      const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/i;
+      if (!urlPattern.test(url.trim())) {
+        toast.error("Format tautan (URL) tidak valid. Pastikan tautan lengkap dan benar.");
+        return;
+      }
       scan({ mode: "url", url });
     }
   };
