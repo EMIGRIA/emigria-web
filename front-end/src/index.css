@@ -390,3 +390,44 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-text-fill-color: transparent;
   animation: greenShine 4.5s linear infinite, blingPulseDark 3s ease-in-out infinite;
 }
+
+/* Toaster */
+.emigria-toast {
+  background: rgba(255, 255, 255, 0.85) !important;
+  color: #001e2b !important;
+  font-family: "Plus Jakarta Sans", sans-serif !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.015em !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(0, 30, 43, 0.06) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  padding: 11px 18px !important;
+  box-shadow: 0 16px 36px -4px rgba(0, 30, 43, 0.05), 0 6px 16px -2px rgba(0, 30, 43, 0.02) !important;
+  max-width: 380px !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.dark .emigria-toast {
+  background: rgba(0, 30, 43, 0.85) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.35), 0 6px 16px -2px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Success Toast Variants */
+.emigria-toast-success {
+  border: 1px solid rgba(14, 128, 56, 0.12) !important;
+}
+.dark .emigria-toast-success {
+  border: 1px solid rgba(0, 237, 100, 0.15) !important;
+}
+
+/* Error Toast Variants */
+.emigria-toast-error {
+  border: 1px solid rgba(220, 38, 38, 0.12) !important;
+}
+.dark .emigria-toast-error {
+  border: 1px solid rgba(220, 38, 38, 0.25) !important;
+}
