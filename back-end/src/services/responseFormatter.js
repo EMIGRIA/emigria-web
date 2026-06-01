@@ -143,7 +143,7 @@ export function format({ scanId, inputType, geminiResult, mlResult, geoResults, 
       geo_risk_score: primaryGeo.risk_score,
       is_fallback: mlResult.is_fallback,
     },
-    // triggered_rules: triggeredRules,
+    triggered_rules: triggeredRules,
     extracted_data: (() => {
       const { extra, ...clean } = geminiResult.extracted_data || {};
       return clean;
