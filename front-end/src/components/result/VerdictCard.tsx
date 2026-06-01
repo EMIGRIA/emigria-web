@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { getRiskColor, getRiskLabel, formatPctDirect, formatPct, formatTriggeredRule } from "../../lib/riskUtils";
-import { CheckCircle2, AlertTriangle, XCircle, ShieldAlert } from "lucide-react";
+import { CheckCircle2, AlertTriangle, XCircle, ShieldAlert, ChevronDown, ChevronUp } from "lucide-react";
+
+const RULES_PER_PAGE = 3;
 
 interface VerdictCardProps {
   verdict: {
@@ -16,6 +19,8 @@ export default function VerdictCard({ verdict, summaryText, triggeredRules = [] 
   const { risk_level, ml_fraud_probability, final_risk_percentage, hard_stop_triggered } = verdict;
   const colorClass = getRiskColor(risk_level);
   const label = getRiskLabel(risk_level);
+
+  const [visibleCount, setVisibleCount] = useState(RULES_PER_PAGE);
 
   // Primary score: prefer final_risk_percentage from hybrid model, fallback to ml_fraud_probability
   const primaryScore = final_risk_percentage != null
@@ -35,10 +40,14 @@ export default function VerdictCard({ verdict, summaryText, triggeredRules = [] 
     return <AlertTriangle className="w-4 h-4 text-text-muted" />;
   };
 
-  // Process rules Indonesian labels
-  const formattedRules = (triggeredRules || [])
-    .map(formatTriggeredRule)
-    .filter(Boolean);
+  // Process rules: translate → filter empty → deduplicate by label
+  const formattedRules = Array.from(
+    new Set(
+      (triggeredRules || [])
+        .map(formatTriggeredRule)
+        .filter(Boolean)
+    )
+  );
 
   // High-trust fallbacks if no specific ML rules triggered but classification was high
   const displayRules = formattedRules.length > 0
@@ -48,6 +57,18 @@ export default function VerdictCard({ verdict, summaryText, triggeredRules = [] 
         "Metode rekrutmen tidak transparan / melalui perantara tidak resmi.",
         "Deskripsi pekerjaan tidak spesifik / indikasi eksploitasi.",
       ];
+
+  const visibleRules = displayRules.slice(0, visibleCount);
+  const hasMore = visibleCount < displayRules.length;
+  const isExpanded = visibleCount > RULES_PER_PAGE;
+
+  const handleShowMore = () => {
+    setVisibleCount((prev) => Math.min(prev + RULES_PER_PAGE, displayRules.length));
+  };
+
+  const handleCollapse = () => {
+    setVisibleCount(RULES_PER_PAGE);
+  };
 
   return (
     <div
@@ -100,17 +121,49 @@ export default function VerdictCard({ verdict, summaryText, triggeredRules = [] 
       {/* Risk Signals / Reasons if High Risk */}
       {(risk_level?.toLowerCase() === "high" || risk_level?.toLowerCase() === "critical") && (
         <div className="border-t border-current/10 pt-4 mt-4 space-y-2.5">
-          <p className="font-sans text-[10px] font-bold uppercase tracking-[0.08em] opacity-60">
-            Faktor Risiko Terdeteksi:
-          </p>
+          <div className="flex items-center justify-between">
+            <p className="font-sans text-[10px] font-bold uppercase tracking-[0.08em] opacity-60">
+              Faktor Risiko Terdeteksi:
+            </p>
+            <span className="font-sans text-[10px] font-semibold opacity-40">
+              {displayRules.length} faktor
+            </span>
+          </div>
+
           <ul className="space-y-2">
-            {displayRules.map((rule, idx) => (
-              <li key={idx} className="flex items-start gap-2 text-xs font-semibold leading-relaxed opacity-95">
+            {visibleRules.map((rule, idx) => (
+              <li
+                key={idx}
+                className="flex items-start gap-2 text-xs font-semibold leading-relaxed opacity-95 animate-[fadeInUp_0.2s_ease_both]"
+                style={{ animationDelay: `${idx * 40}ms` }}
+              >
                 <span className="text-risk-high dark:text-red-400 font-extrabold shrink-0 mt-0.5">•</span>
                 <span>{rule}</span>
               </li>
             ))}
           </ul>
+
+          {/* Show More / Collapse buttons */}
+          <div className="flex gap-2 pt-1">
+            {hasMore && (
+              <button
+                onClick={handleShowMore}
+                className="flex items-center gap-1 text-[11px] font-semibold opacity-60 hover:opacity-100 transition-opacity duration-200 cursor-pointer"
+              >
+                <ChevronDown className="w-3.5 h-3.5" />
+                Tampilkan {Math.min(RULES_PER_PAGE, displayRules.length - visibleCount)} faktor lainnya
+              </button>
+            )}
+            {isExpanded && (
+              <button
+                onClick={handleCollapse}
+                className="flex items-center gap-1 text-[11px] font-semibold opacity-40 hover:opacity-70 transition-opacity duration-200 cursor-pointer ml-auto"
+              >
+                <ChevronUp className="w-3.5 h-3.5" />
+                Sembunyikan
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>
