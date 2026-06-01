@@ -22,7 +22,7 @@ export const GEO_RISK_DATA = {
       ]
     }
   },
-  "Cambodia": {
+  "Cambodia": { // dummy
     "iso3": "KHM",
     "year": 2025,
     "crime_index": {
@@ -41,7 +41,8 @@ export const GEO_RISK_DATA = {
         { "year": 2023, "crime_index": 6.85 },
         { "year": 2021, "crime_index": 5.83 }
       ]
-    }
+    },
+    "source_note": "Data Kamboja diisi menggunakan data proksi dari Global Organized Crime Index 2023 dan Numbeo Crime Index 2025. Kamboja dikenal sebagai salah satu negara dengan tingkat kejahatan terorganisir tertinggi di Asia Tenggara, termasuk penipuan online, perdagangan manusia, dan kerja paksa di kawasan scam compound. Nilai dinormalisasi ke skala 0-10 sesuai kontrak data yang berlaku."
   },
   "Indonesia": {
     "iso3": "IDN",
@@ -106,7 +107,7 @@ export const GEO_RISK_DATA = {
       ]
     }
   },
-  "Myanmar": {
+  "Myanmar": { // dummy
     "iso3": "MMR",
     "year": 2025,
     "crime_index": {
@@ -125,7 +126,8 @@ export const GEO_RISK_DATA = {
         { "year": 2023, "crime_index": 8.15 },
         { "year": 2021, "crime_index": 7.59 }
       ]
-    }
+    },
+    "source_note": "Data Myanmar diisi menggunakan data proksi dari Global Organized Crime Index 2023 dan laporan UNODC 2024. Myanmar menempati peringkat pertama negara dengan kriminalitas terorganisir tertinggi secara global akibat konflik bersenjata yang berkepanjangan sejak kudeta militer 2021, meningkatnya produksi narkoba di kawasan Golden Triangle, serta maraknya kasus perdagangan manusia dan penipuan telekomunikasi lintas batas. Variasi negatif menunjukkan sedikit penurunan dibanding tahun sebelumnya namun tetap pada level kritis."
   },
   "Philippines": {
     "iso3": "PHL",
