@@ -54,7 +54,7 @@ const CANONICAL_COUNTRY_MAP = {
 };
 
 const COUNTRY_TO_STANDARD_CURRENCY = {
-  'Singapura': 'SGD', 'Filipina': 'PHP', 'Kamboja': 'KHR',
+  'Singapura': 'SGD', 'Filipina': 'PHP', 'Kamboja': 'USD', // Kamboja praktis menggunakan USD (bukan KHR)
   'Arab Saudi': 'SAR', 'Korea Selatan': 'KRW', 'Uni Emirat Arab': 'AED',
   'Jepang': 'JPY', 'Malaysia': 'MYR', 'Brunei Darussalam': 'BND',
   'Thailand': 'THB', 'Vietnam': 'VND', 'Laos': 'LAK',
