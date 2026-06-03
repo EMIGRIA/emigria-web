@@ -85,10 +85,24 @@ function toIdr(amount, currency) {
   return amount * (EXCHANGE_RATES_TO_IDR[currency] || 1);
 }
 
-/** Compare offered vs standard and return a flag string (or null if OK) */
+/**
+ * Compare offered vs standard and return a flag string (or null if OK).
+ * Tolerance rules (applies to "too low" direction):
+ *   - selisih < Rp 1.000.000  → masih wajar (null)
+ *   - Rp 1.000.000 ≤ selisih < Rp 1.500.000 → perlu ditinjau
+ *   - selisih ≥ Rp 1.500.000  → tidak wajar (flagTooLow)
+ */
+const SALARY_TOLERANCE_FAIR   = 1_000_000;   // < 1 jt selisih → wajar
+const SALARY_TOLERANCE_REVIEW = 1_500_000;   // ≥ 1,5 jt selisih → tidak wajar
+
 function compareFlag(offeredIdr, standardIdr, flagTooHigh, flagTooLow) {
   if (offeredIdr > standardIdr * 2) return flagTooHigh;
-  if (offeredIdr < standardIdr) return flagTooLow;
+  if (offeredIdr < standardIdr) {
+    const diff = standardIdr - offeredIdr;
+    if (diff < SALARY_TOLERANCE_FAIR)   return null;        // wajar
+    if (diff < SALARY_TOLERANCE_REVIEW) return 'Gaji sedikit di bawah standar, perlu ditinjau lebih lanjut';
+    return flagTooLow;                                      // tidak wajar
+  }
   return null;
 }
 
@@ -356,10 +370,18 @@ export function analyze(country, jobTitle, salaryRange, salaryCurrency) {
     ? compareFlag(offeredIdr, fallbackMax, "Gaji ditawarkan tidak realistis (terlalu tinggi)", "Gaji ditawarkan di bawah standar rata-rata BP2MI regional")
     : null;
 
-  // For fallback "too low" comparison, use fallbackMin instead of fallbackMax
+  // For fallback "too low" comparison, use fallbackMin with tolerance thresholds
   const fallbackFlag = offeredIdr !== null
-    ? (offeredIdr > fallbackMax * 2 ? "Gaji ditawarkan tidak realistis (terlalu tinggi)" :
-       offeredIdr < fallbackMin ? "Gaji ditawarkan di bawah standar rata-rata BP2MI regional" : null)
+    ? (() => {
+        if (offeredIdr > fallbackMax * 2) return "Gaji ditawarkan tidak realistis (terlalu tinggi)";
+        if (offeredIdr < fallbackMin) {
+          const diff = fallbackMin - offeredIdr;
+          if (diff < SALARY_TOLERANCE_FAIR)   return null;
+          if (diff < SALARY_TOLERANCE_REVIEW) return 'Gaji sedikit di bawah standar, perlu ditinjau lebih lanjut';
+          return "Gaji ditawarkan di bawah standar rata-rata BP2MI regional";
+        }
+        return null;
+      })()
     : null;
 
   return buildResult({
