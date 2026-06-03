@@ -1,12 +1,3 @@
-/**
- * ML Service
- * Role    : Forward extracted job data to FastAPI AI service,
- *           return fraud prediction result
- * Status  : LIVE — connected to real FastAPI Docker service
- * Endpoint: POST http://localhost:8000/predict
- *           (configured via ML_SERVICE_URL env variable)
- */
-
 import axiosClient from '../utils/axiosClient.js';
 import { ML_SERVICE_URL } from '../config/env.js';
 
