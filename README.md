@@ -33,23 +33,6 @@ React Frontend            →  Tampilan hasil analisis kepada pengguna
 
 ---
 
-## Arsitektur Monorepo
-
-Proyek EMIGRIA terdiri dari **dua repository terpisah**:
-
-```
-# Repo 1: emigria-web (repo ini)
-emigrIa-web/
-├── front-end/          # React + TypeScript + Vite (UI)
-└── back-end/           # Express.js + Prisma + Node.js (API Orchestrator)
-
-# Repo 2: emigria-ai-model (repo terpisah)
-emigrIa-ai-model/
-└── api/                # FastAPI + TensorFlow MLP (ML Inference Service)
-```
-
----
-
 ## Sub-Proyek
 
 ### [front-end](./front-end/README.md)
@@ -85,46 +68,33 @@ API orchestrator berbasis **Node.js + Express 5**.
 ### Prasyarat
 
 - **Node.js** 20+
-- **Python** 3.10+
-- **Docker** (untuk AI-MODEL)
 - Akun [Neon](https://neon.tech/) (PostgreSQL serverless)
 - [Google AI Studio API Key](https://aistudio.google.com/)
+
+> AI-MODEL sudah di-deploy di Render.com (`https://ai-model-rha2.onrender.com`), tidak perlu dijalankan secara lokal.
 
 ### 1. Clone Repository
 
 ```bash
-# Clone repo utama (front-end + back-end)
 git clone https://github.com/EMIGRIA/emigria-web.git
 cd emigria-web
-
-# Clone repo AI-MODEL (terpisah)
-git clone https://github.com/EMIGRIA/AI-MODEL.git
-cd AI-MODEL
 ```
 
-### 2. Jalankan AI-MODEL (FastAPI)
+### 2. Jalankan Back-End (Express.js)
 
 ```bash
-cd AI-MODEL
-docker-compose up --build -d
-# Service berjalan di http://localhost:8000
-```
-
-### 3. Jalankan Back-End (Express.js)
-
-```bash
-cd emigria-web/back-end
+cd back-end
 npm install
-cp .env.example .env   # Isi nilai .env
+cp .env.example .env   # Isi nilai .env (lihat bagian .env di bawah)
 npx prisma generate
 npm run dev
 # Server berjalan di http://localhost:3000
 ```
 
-### 4. Jalankan Front-End (React + Vite)
+### 3. Jalankan Front-End (React + Vite)
 
 ```bash
-cd emigria-web/front-end
+cd front-end
 npm install
 npm run dev
 # Aplikasi berjalan di http://localhost:5173
