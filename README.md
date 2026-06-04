@@ -94,18 +94,18 @@ API orchestrator berbasis **Node.js + Express 5**.
 
 ```bash
 # Clone repo utama (front-end + back-end)
-git clone https://github.com/<your-org>/emigria-web.git
+git clone https://github.com/EMIGRIA/emigria-web.git
 cd emigria-web
 
 # Clone repo AI-MODEL (terpisah)
-git clone https://github.com/<your-org>/emigria-ai-model.git
-cd emigria-ai-model
+git clone https://github.com/EMIGRIA/AI-MODEL.git
+cd AI-MODEL
 ```
 
 ### 2. Jalankan AI-MODEL (FastAPI)
 
 ```bash
-cd emigria-ai-model
+cd AI-MODEL
 docker-compose up --build -d
 # Service berjalan di http://localhost:8000
 ```
