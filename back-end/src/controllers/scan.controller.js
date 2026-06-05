@@ -61,9 +61,11 @@ export const analyze = async (req, res) => {
     return res.status(200).json(finalResponse);
   } catch (err) {
     console.error('Scan pipeline error:', err);
-    return res.status(500).json({
-      success: false,
-      message: 'Internal server error during scan analysis',
-    });
+    const status  = err.statusCode || 500;
+    const code    = err.code || 'INTERNAL_ERROR';
+    const message = status !== 500
+      ? err.message
+      : 'Internal server error during scan analysis';
+    return res.status(status).json({ success: false, code, message });
   }
 };

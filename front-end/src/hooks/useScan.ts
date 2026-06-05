@@ -49,6 +49,8 @@ export function useScan() {
         
         if (status === 429) {
           errorMessage = "Terlalu banyak permintaan, coba lagi nanti.";
+        } else if (status === 422 && err.response.data?.code === "NOT_JOB_POSTING") {
+          errorMessage = err.response.data.message;
         } else if (status >= 500) {
           errorMessage = "Layanan AI sedang bermasalah, silakan coba lagi nanti.";
         } else if (status === 400 || serverMessage === "Validation failed") {

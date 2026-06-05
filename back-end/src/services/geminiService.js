@@ -6,6 +6,7 @@ Your task is to extract structured JSON from the provided job poster, image, OCR
 Return ONLY valid JSON. Do not include markdown, explanation, comments, or extra text.
 Use this exact JSON schema:
 {
+  "is_job_posting": true,
   "extracted_data": {
     "title": "",
     "location": "",
@@ -38,7 +39,8 @@ Rules:
 11. Set "company_identity_clear" to true only if company name, profile, address, or official identity is clear.
 12. Set "uses_personal_contact" to true if the job uses WhatsApp, personal phone number, personal email, Gmail/Yahoo/Hotmail, or informal contact as the main application method.
 13. Set "urgency_level" to one of: "low", "medium", "high".
-14. Fill "risk_keywords" with exact suspicious phrases found in the input.`;
+14. Fill "risk_keywords" with exact suspicious phrases found in the input.
+15. Set "is_job_posting" to false if the input is NOT a job offer/vacancy/recruitment ad (e.g. random text, unrelated image, news article, personal message, product ad, meme, etc). Set to true only when the content is clearly a job posting or work offer.`;
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
@@ -80,12 +82,24 @@ export async function extract(normalizedInput) {
     if (!parsed.extracted_data) {
       throw new Error('Gemini tidak mengembalikan struktur JSON yang lengkap');
     }
+
+    // Reject non-job-posting content
+    if (parsed.is_job_posting === false) {
+      const err = new Error('Konten yang diunggah bukan merupakan lowongan pekerjaan. Silakan coba dengan brosur, teks, atau tautan lowongan kerja yang valid.');
+      err.statusCode = 422;
+      err.code = 'NOT_JOB_POSTING';
+      throw err;
+    }
     
     return parsed;
   } catch (error) {
+    // Re-throw known/expected errors (e.g. NOT_JOB_POSTING) as-is
+    if (error.statusCode) throw error;
+
+    // Wrap unexpected SDK/network errors as 502
     console.error('Error saat memanggil SDK Gemini:', error);
     const err = new Error('Gagal memproses analisis menggunakan AI');
-    err.statusCode = 502; // Beri kode 502 agar konsisten
+    err.statusCode = 502;
     throw err;
   }
 }
