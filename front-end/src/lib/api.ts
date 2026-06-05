@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://emigria-web-production.up.railway.app/api",
+  baseURL: "https://emigria-web-production.up.railway.app",
   timeout: 30000,
 });
-  
+
 export default api;
