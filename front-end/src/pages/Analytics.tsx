@@ -18,6 +18,7 @@ import {
   Activity,
   ChevronLeft,
   ChevronRight,
+  ScanLine,
 } from "lucide-react";
 
 const ITEMS_PER_PAGE = 5;
@@ -51,14 +52,12 @@ function riskBadge(level: string) {
   const l = level?.toLowerCase();
   if (l === "low") return {
     label: "Aman",
-    dot: "bg-risk-low",
     text: "text-risk-low",
     bg: "bg-risk-low/8 border-risk-low/20",
     icon: <ShieldCheck className="w-3 h-3" />,
   };
   return {
     label: "Berisiko",
-    dot: "bg-risk-high",
     text: "text-risk-high",
     bg: "bg-risk-high/8 border-risk-high/20",
     icon: <ShieldAlert className="w-3 h-3" />,
@@ -130,128 +129,155 @@ export default function Analytics() {
           </p>
         </div>
 
-        {/* ── Stat Cards ── */}
-        <div className="grid grid-cols-2 gap-3" style={{ animation: "fadeInUp 0.5s 80ms ease both" }}>
-          <StatCard
-            icon={<Activity className="w-4 h-4" />}
-            label="Total Pemindaian"
-            sub="Seluruh scan lowongan"
-            value={totalScans}
-            accent="text-brand-green"
-          />
-          <StatCard
-            icon={<ShieldAlert className="w-4 h-4" />}
-            label="Rasio Penipuan"
-            sub={`${highRisk} terdeteksi berisiko`}
-            percent={fraudRate}
-            accent="text-risk-high"
-          />
-        </div>
-
-        {/* ── Two-column grid (countries + salary) ── */}
-        <div
-          className="grid grid-cols-1 md:grid-cols-2 gap-4"
-          style={{ animation: "fadeInUp 0.5s 160ms ease both" }}
-        >
-          {/* Top Countries */}
-          {topCountries.length > 0 && (
-            <Section icon={<MapPin className="w-4 h-4" />} title="Negara Tujuan Teratas">
-              <div className="space-y-3">
-                {topCountries.map((item, i) => {
-                  const max = topCountries[0]?.count ?? 1;
-                  const pct = (item.count / max) * 100;
-                  return (
-                    <div key={i} className="space-y-1">
-                      <div className="flex justify-between items-center">
-                        <span className="flex items-center gap-2 font-sans text-xs text-text-main">
-                          <span className="w-4 h-4 rounded-full bg-brand-deep border border-border-main flex items-center justify-center font-mono text-[9px] text-text-sub shrink-0">
-                            {i + 1}
-                          </span>
-                          {item.country}
-                        </span>
-                        <span className="font-mono text-[10px] text-text-sub/50">{item.count}×</span>
-                      </div>
-                      <div className="h-1 bg-brand-deep rounded-full overflow-hidden">
-                        <div
-                          className="h-full rounded-full transition-all duration-1000 ease-out"
-                          style={{ width: `${pct}%`, background: "var(--brand-green)" }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
+        {totalScans === 0 ? (
+          /* ── Empty State ── */
+          <div
+            className="flex flex-col items-center justify-center gap-5 py-24 text-center"
+            style={{ animation: "fadeInUp 0.5s 80ms ease both" }}
+          >
+            <div className="relative">
+              <div className="w-16 h-16 rounded-2xl bg-brand-surface border border-border-main/60 flex items-center justify-center shadow-sm">
+                <ScanLine className="w-7 h-7 text-text-sub/40" strokeWidth={1.5} />
               </div>
-            </Section>
-          )}
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-brand-deep border border-border-main/60 flex items-center justify-center">
+                <span className="font-mono text-[9px] font-bold text-text-sub/40">0</span>
+              </div>
+            </div>
+            <div className="space-y-1.5 max-w-xs">
+              <p className="font-sans text-sm font-medium text-text-main">
+                Belum ada data pemindaian
+              </p>
+              <p className="font-sans text-xs text-text-sub/50 leading-relaxed">
+                Statistik akan muncul setelah pengguna melakukan pemindaian lowongan kerja pertama.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* ── Stat Cards ── */}
+            <div className="grid grid-cols-2 gap-3" style={{ animation: "fadeInUp 0.5s 80ms ease both" }}>
+              <StatCard
+                icon={<Activity className="w-4 h-4" />}
+                label="Total Pemindaian"
+                sub="Seluruh scan lowongan"
+                value={totalScans}
+                accent="text-brand-green"
+              />
+              <StatCard
+                icon={<ShieldAlert className="w-4 h-4" />}
+                label="Rasio Penipuan"
+                sub={`${highRisk} terdeteksi berisiko`}
+                percent={fraudRate}
+                accent="text-risk-high"
+              />
+            </div>
 
-          {/* Salary Breakdown */}
-          <Section icon={<DollarSign className="w-4 h-4" />} title="Kewajaran Gaji">
-            <SalaryBreakdown stats={salaryStats} total={totalScans} />
-          </Section>
-        </div>
-
-        {/* ── Recent Scans with Pagination ── */}
-        {recentScans.length > 0 && (
-          <div style={{ animation: "fadeInUp 0.5s 240ms ease both" }}>
-            <Section
-              icon={<Clock className="w-4 h-4" />}
-              title="Riwayat Scan Terbaru"
-              headerRight={
-                recentScans.length > ITEMS_PER_PAGE ? (
-                  <span className="font-sans text-[11px] text-text-sub/50">
-                    {(page - 1) * ITEMS_PER_PAGE + 1}–{Math.min(page * ITEMS_PER_PAGE, recentScans.length)} dari {recentScans.length}
-                  </span>
-                ) : null
-              }
+            {/* ── Two-column grid (countries + salary) ── */}
+            <div
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+              style={{ animation: "fadeInUp 0.5s 160ms ease both" }}
             >
-              {/* Rows */}
-              <div className="space-y-2">
-                {paginated.map((scan, i) => (
-                  <ScanRow key={scan.id} scan={scan} index={i} />
-                ))}
-              </div>
+              {/* Top Countries */}
+              {topCountries.length > 0 && (
+                <Section icon={<MapPin className="w-4 h-4" />} title="Negara Tujuan Teratas">
+                  <div className="space-y-3">
+                    {topCountries.map((item, i) => {
+                      const max = topCountries[0]?.count ?? 1;
+                      const pct = (item.count / max) * 100;
+                      return (
+                        <div key={i} className="space-y-1">
+                          <div className="flex justify-between items-center">
+                            <span className="flex items-center gap-2 font-sans text-xs text-text-main">
+                              <span className="w-4 h-4 rounded-full bg-brand-deep border border-border-main flex items-center justify-center font-mono text-[9px] text-text-sub shrink-0">
+                                {i + 1}
+                              </span>
+                              {item.country}
+                            </span>
+                            <span className="font-mono text-[10px] text-text-sub/50">{item.count}×</span>
+                          </div>
+                          <div className="h-1 bg-brand-deep rounded-full overflow-hidden">
+                            <div
+                              className="h-full rounded-full transition-all duration-1000 ease-out"
+                              style={{ width: `${pct}%`, background: "var(--brand-green)" }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </Section>
+              )}
 
-              {/* Pagination controls */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-between pt-4 border-t border-border-main/40 mt-4">
-                  <button
-                    onClick={() => goTo(page - 1)}
-                    disabled={page === 1}
-                    className="flex items-center gap-1.5 font-sans text-xs font-medium text-text-sub hover:text-text-main disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 px-3 py-1.5 rounded-lg hover:bg-brand-deep cursor-pointer select-none"
-                  >
-                    <ChevronLeft className="w-3.5 h-3.5" />
-                    Sebelumnya
-                  </button>
+              {/* Salary Breakdown */}
+              <Section icon={<DollarSign className="w-4 h-4" />} title="Kewajaran Gaji">
+                <SalaryBreakdown stats={salaryStats} total={totalScans} />
+              </Section>
+            </div>
 
-                  {/* Page dots */}
-                  <div className="flex items-center gap-1.5">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-                      <button
-                        key={n}
-                        onClick={() => goTo(n)}
-                        className={`w-7 h-7 rounded-lg font-sans text-[11px] font-medium transition-all duration-200 cursor-pointer select-none ${
-                          n === page
-                            ? "bg-brand-green text-white shadow-sm"
-                            : "text-text-sub hover:text-text-main hover:bg-brand-deep"
-                        }`}
-                      >
-                        {n}
-                      </button>
+            {/* ── Recent Scans with Pagination ── */}
+            {recentScans.length > 0 && (
+              <div style={{ animation: "fadeInUp 0.5s 240ms ease both" }}>
+                <Section
+                  icon={<Clock className="w-4 h-4" />}
+                  title="Riwayat Scan Terbaru"
+                  headerRight={
+                    recentScans.length > ITEMS_PER_PAGE ? (
+                      <span className="font-sans text-[11px] text-text-sub/50">
+                        {(page - 1) * ITEMS_PER_PAGE + 1}–{Math.min(page * ITEMS_PER_PAGE, recentScans.length)} dari {recentScans.length}
+                      </span>
+                    ) : null
+                  }
+                >
+                  {/* Rows */}
+                  <div className="space-y-2">
+                    {paginated.map((scan, i) => (
+                      <ScanRow key={scan.id} scan={scan} index={i} />
                     ))}
                   </div>
 
-                  <button
-                    onClick={() => goTo(page + 1)}
-                    disabled={page === totalPages}
-                    className="flex items-center gap-1.5 font-sans text-xs font-medium text-text-sub hover:text-text-main disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 px-3 py-1.5 rounded-lg hover:bg-brand-deep cursor-pointer select-none"
-                  >
-                    Berikutnya
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              )}
-            </Section>
-          </div>
+                  {/* Pagination controls */}
+                  {totalPages > 1 && (
+                    <div className="flex items-center justify-between pt-4 border-t border-border-main/40 mt-4">
+                      <button
+                        onClick={() => goTo(page - 1)}
+                        disabled={page === 1}
+                        className="flex items-center gap-1.5 font-sans text-xs font-medium text-text-sub hover:text-text-main disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 px-3 py-1.5 rounded-lg hover:bg-brand-deep cursor-pointer select-none"
+                      >
+                        <ChevronLeft className="w-3.5 h-3.5" />
+                        Sebelumnya
+                      </button>
+
+                      {/* Page dots */}
+                      <div className="flex items-center gap-1.5">
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+                          <button
+                            key={n}
+                            onClick={() => goTo(n)}
+                            className={`w-7 h-7 rounded-lg font-sans text-[11px] font-medium transition-all duration-200 cursor-pointer select-none ${
+                              n === page
+                                ? "bg-brand-green text-white shadow-sm"
+                                : "text-text-sub hover:text-text-main hover:bg-brand-deep"
+                            }`}
+                          >
+                            {n}
+                          </button>
+                        ))}
+                      </div>
+
+                      <button
+                        onClick={() => goTo(page + 1)}
+                        disabled={page === totalPages}
+                        className="flex items-center gap-1.5 font-sans text-xs font-medium text-text-sub hover:text-text-main disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 px-3 py-1.5 rounded-lg hover:bg-brand-deep cursor-pointer select-none"
+                      >
+                        Berikutnya
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )}
+                </Section>
+              </div>
+            )}
+          </>
         )}
       </main>
     </div>
@@ -304,7 +330,7 @@ function StatCard({
 }) {
   const displayValue = useCounter(value ?? 0);
   const displayPct   = percent != null ? Math.round(percent * 100) : null;
-  const animPct      = useCounter(displayPct ?? 0);
+  const animPct      = useCounter(displayPct ?? 0, displayPct != null ? 1200 : 0);
 
   return (
     <div className="bg-brand-surface border border-border-main rounded-2xl p-5 flex flex-col gap-3 hover:border-brand-green/20 transition-all duration-300">
@@ -373,8 +399,9 @@ function SalaryBreakdown({
 
 /* ── ScanRow ── */
 function ScanRow({ scan, index }: { scan: RecentScan; index: number }) {
-  const badge = riskBadge(scan.risk_level);
-  const pct   = scan.final_risk_percentage != null ? Math.round(scan.final_risk_percentage) : null;
+  const badge       = riskBadge(scan.risk_level);
+  const pct         = scan.final_risk_percentage != null ? Math.round(scan.final_risk_percentage) : null;
+  const isHighRisk  = pct != null && pct >= 50;
 
   return (
     <div
@@ -414,7 +441,7 @@ function ScanRow({ scan, index }: { scan: RecentScan; index: number }) {
           <span className="flex items-center gap-1"><DollarSign className="w-3 h-3" /><span className="truncate max-w-[100px]">{scan.salary}</span></span>
         )}
         {pct != null && (
-          <span className={`flex items-center gap-1 font-mono font-semibold ${pct >= 50 ? "text-risk-high" : "text-risk-low"}`}>
+          <span className={`flex items-center gap-1 font-mono font-semibold ${isHighRisk ? "text-risk-high" : "text-risk-low"}`}>
             <TrendingUp className="w-3 h-3" />{pct}% risiko
           </span>
         )}
@@ -431,7 +458,7 @@ function ScanRow({ scan, index }: { scan: RecentScan; index: number }) {
       {pct != null && (
         <div className="h-[2px] bg-border-main/20 rounded-full overflow-hidden">
           <div
-            className={`h-full rounded-full transition-all duration-700 ease-out ${pct >= 50 ? "bg-risk-high" : "bg-risk-low"}`}
+            className={`h-full rounded-full transition-all duration-700 ease-out ${isHighRisk ? "bg-risk-high" : "bg-risk-low"}`}
             style={{ width: `${pct}%` }}
           />
         </div>
