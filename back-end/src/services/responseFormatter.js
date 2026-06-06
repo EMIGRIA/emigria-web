@@ -61,7 +61,7 @@ function generateShareText(riskLevel, title, country, triggeredRules, realityRes
 
   const job = title || 'Lowongan Kerja';
   const loc = country || 'Tidak ditentukan';
-  const formattedRisk = isHighRisk ? 'RISIKO TINGGI \u{1F6A8}' : 'RISIKO RENDAH (Relatif Aman) \u{2705}';
+  const formattedRisk = isHighRisk ? 'RISIKO TINGGI' : 'RISIKO RENDAH (Relatif Aman)';
   
   // Calculate percentage
   const pct = mlResult?.final_risk_percentage != null
@@ -71,18 +71,18 @@ function generateShareText(riskLevel, title, country, triggeredRules, realityRes
       : null;
        
   const scoreStr = pct !== null ? ` (${pct}%)` : '';
-  const companyInfo = company ? `\u{1F3E2} *Perusahaan/PT:* ${company}\n` : '';
+  const companyInfo = company ? `- *Perusahaan/PT:* ${company}\n` : '';
 
   // Dynamic intro based on risk and company name
   let header = '';
   let intro = '';
   if (isHighRisk) {
-    header = `\u{1F6A8} *EMIGRIA FRAUD ALERT!* \u{1F6A8}`;
+    header = `*EMIGRIA FRAUD ALERT!*`;
     intro = company
       ? `Sistem AI Emigria mendeteksi indikasi penipuan pada lowongan kerja dari *${company}*:`
       : `Sistem AI Emigria mendeteksi indikasi penipuan pada lowongan kerja berikut:`;
   } else {
-    header = `\u{2705} *HASIL CEK EMIGRIA* \u{2705}`;
+    header = `*HASIL CEK EMIGRIA*`;
     intro = company
       ? `Sistem AI Emigria menganalisis lowongan kerja dari *${company}* relatif aman:`
       : `Sistem AI Emigria menganalisis lowongan kerja berikut relatif aman:`;
@@ -92,21 +92,21 @@ function generateShareText(riskLevel, title, country, triggeredRules, realityRes
   let message = 
     `${header}\n\n` +
     `${intro}\n\n` +
-    `\u{1F4CC} *Posisi:* ${job}\n` +
+    `- *Posisi:* ${job}\n` +
     companyInfo +
-    `\u{1F5FA}\uFE0F *Negara:* ${loc}\n` +
-    `\u{1F4CA} *Status:* ${formattedRisk}${scoreStr}\n\n`;
+    `- *Negara:* ${loc}\n` +
+    `- *Status:* *${formattedRisk}*${scoreStr}\n\n`;
 
   // Only render red flags if the listing is High Risk / Warning status
   if (isHighRisk && redFlags.length > 0) {
     message += 
-      `\u{1F6A9} *Parameter Keamanan (Red Flags):*\n` +
+      `*Parameter Keamanan (Red Flags):*\n` +
       redFlags.slice(0, 3).map(f => `• ${f}`).join('\n') + `\n\n`;
   }
 
   message += 
-    `\u{1F4A1} *Tips:* Selalu verifikasi pada penyedia resmi lowongan sebelum mendaftar!\n\n` +
-    `Gratis cek keaslian lowongan kerja luar negeri instan di https://landing-page-emigria.vercel.app/`;
+    `_Tips: Selalu verifikasi pada penyedia resmi lowongan sebelum mendaftar!_\n\n` +
+    `Gratis cek keaslian lowongan kerja luar negeri instan di https://www.emigria.my.id/`;
 
   return message;
 }
