@@ -16,7 +16,6 @@ export default function ShareButton({ shareText }: ShareButtonProps) {
   };
 
   const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
-3
   return (
     <div id="bagikan" className="bg-brand-surface rounded-2xl border border-border-main/80 dark:border-border-main/30 overflow-hidden shadow-sm hover:shadow-md hover:scale-[1.01] hover:border-brand-green/30 transition-all duration-300 ease-out cursor-default">
       {/* Header */}
